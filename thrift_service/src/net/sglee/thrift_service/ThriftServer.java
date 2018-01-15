@@ -19,6 +19,7 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
 
+import net.sglee.thrift_gen.TransferService;
 import thrift_msg.*;
 
 public class ThriftServer {	

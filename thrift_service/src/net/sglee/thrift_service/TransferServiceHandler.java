@@ -2,8 +2,8 @@ package net.sglee.thrift_service;
 
 import org.apache.thrift.TException;
 
-import thrift_msg.Message;
-import thrift_msg.TransferService;
+import net.sglee.thrift_gen.Message;
+import net.sglee.thrift_gen.TransferService;
 
 public class TransferServiceHandler implements TransferService.Iface {
 

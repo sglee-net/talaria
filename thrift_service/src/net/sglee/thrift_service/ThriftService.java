@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 
+import net.sglee.thrift_gen.TransferService;
 import thrift_msg.*;
 
 @Controller
