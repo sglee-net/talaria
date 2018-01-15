@@ -9,8 +9,8 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import messenger.TransferService;
-import net.sglee.thrift_gen.*;
+import thrift_gen_messenger.Message;
+import thrift_gen_messenger.TransferService;
 
 public class ThriftClient {
 

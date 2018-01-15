@@ -19,6 +19,8 @@ import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
 
+import thrift_gen_messenger.TransferService;
+
 public class ThriftServer {	
 	public static TransferServiceHandler handler;
 	public static TransferService.Processor processor;

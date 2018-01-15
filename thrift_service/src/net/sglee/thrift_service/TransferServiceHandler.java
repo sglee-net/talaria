@@ -2,6 +2,9 @@ package net.sglee.thrift_service;
 
 import org.apache.thrift.TException;
 
+import thrift_gen_messenger.Message;
+import thrift_gen_messenger.TransferService;
+
 public class TransferServiceHandler implements TransferService.Iface {
 
 	@Override
@@ -111,5 +114,4 @@ public class TransferServiceHandler implements TransferService.Iface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
