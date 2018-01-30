@@ -3,7 +3,7 @@ package net.sglee.websocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sglee.automation.jobcontrol.JobManager;
+//import net.sglee.automation.jobcontrol.JobManager;
 import net.sglee.util.collection.GenericConcurrentLinkedQueue;
 
 public class MessageQueue extends GenericConcurrentLinkedQueue<Message> {
@@ -25,43 +25,16 @@ public class MessageQueue extends GenericConcurrentLinkedQueue<Message> {
 		id=new String(_id);
 	}
 	
-//	class MessageHandler extends GenericConcurrentHashMap<String,Job> {
-//	}
+//	JobManager jobManager=null;
 //	
-//	private MessageHandler messageHandler=null;
-//	
-//	public void setMessageHandler(MessageHandler _handler) {
-//		messageHandler = _handler;
-//	}
-//	
-//	public MessageHandler getMessageHandler() {
-//		return messageHandler;
-//	}
-	
-//	Job job=null;
-//	
-//	public Job getJob() {
-//		return job;
+//	public JobManager getJobManager() {
+//		return jobManager;
 //	}
 //
-//	public void setJob(Job job) {
-//		this.job = job;
+//	public void setJobManager(JobManager jobManager) {
+//		this.jobManager = jobManager;
 //	}
 	
-	JobManager jobManager=null;
-	
-	public JobManager getJobManager() {
-		return jobManager;
-	}
-
-	public void setJobManager(JobManager jobManager) {
-		this.jobManager = jobManager;
-	}
-	
-
-//	public synchronized void putJob(String _key,Job _job) {
-//		messageHandler.put(_key, _job);
-//	}
 
 	@Override
 	public boolean add(Message _e){
@@ -74,20 +47,23 @@ public class MessageQueue extends GenericConcurrentLinkedQueue<Message> {
 		if(message==null) {
 			return;
 		}
-//		for(Job job : messageHandler.values()) {
-//			job.receiveObject(message);
+////		for(Job job : messageHandler.values()) {
+////			job.receiveObject(message);
+////		}
+////		if(job!=null) {
+////			job.receiveObject(message);
+////		}
+//		if(jobManager!=null) {
+//			if(!jobManager.getRootJob().isRunning()) {
+//				new Thread(jobManager).start();
+//				logger.info("JobManager starts.");
+//			} else {
+//				jobManager.getRootJob().receiveObject(message);
+//				logger.info("RootJob of JobManager received the message, "+ message.getPayload());
+//			}
 //		}
-//		if(job!=null) {
-//			job.receiveObject(message);
-//		}
-		if(jobManager!=null) {
-			if(!jobManager.getRootJob().isRunning()) {
-				new Thread(jobManager).start();
-				logger.info("JobManager starts.");
-			} else {
-				jobManager.getRootJob().receiveObject(message);
-				logger.info("RootJob of JobManager received the message, "+ message.getPayload());
-			}
-		}
+		
+		// do something... 
+		System.out.println(message);
 	}
 }

@@ -2,13 +2,13 @@ package net.sglee.websocket.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
+//import java.util.Collection;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import net.sglee.automation.jobcontrol.Job;
+//import net.sglee.automation.jobcontrol.Job;
 import net.sglee.websocket.MessageQueue;
 import net.sglee.websocket.MessageQueueRepository;
 
@@ -20,40 +20,40 @@ public class StartClient {
 	public static void start(String args[]) {
 		ApplicationContext context = new ClassPathXmlApplicationContext("./config/job_bean.xml");
 		
-		net.sglee.automation.jobcontrol.Job rootJob = (net.sglee.automation.jobcontrol.Job)context.getBean("root");
-		System.out.println(rootJob.getName());
-		Collection<? extends Job> collection=null;
-		try {
-			collection = rootJob.collection();
-		} catch (Exception e3) {
-			e3.printStackTrace();
-		}
-		if(collection==null) {
-			return;
-		}
-		
-		for(net.sglee.automation.jobcontrol.Job job : collection) {
-			System.out.println(job.getName());
-		}
-		
-		net.sglee.automation.jobcontrol.JobManager jobManager=new net.sglee.automation.jobcontrol.JobManager();
-		jobManager.setJobTree(rootJob);
-		jobManager.setNumberOfRepeat(Integer.MAX_VALUE);
-		jobManager.setTerminationWaitTime(3000);
-		
-//		Thread thread=new Thread(manager);
-//		thread.start();
-//		
+//		net.sglee.automation.jobcontrol.Job rootJob = (net.sglee.automation.jobcontrol.Job)context.getBean("root");
+//		System.out.println(rootJob.getName());
+//		Collection<? extends Job> collection=null;
 //		try {
-//		thread.join();
-//		} catch (InterruptedException e2) {
-//		// TODO Auto-generated catch block
-//		e2.printStackTrace();
+//			collection = rootJob.collection();
+//		} catch (Exception e3) {
+//			e3.printStackTrace();
+//		}
+//		if(collection==null) {
+//			return;
 //		}
 //		
-//		System.out.println("Application ends");
+//		for(net.sglee.automation.jobcontrol.Job job : collection) {
+//			System.out.println(job.getName());
+//		}
+//		
+//		net.sglee.automation.jobcontrol.JobManager jobManager=new net.sglee.automation.jobcontrol.JobManager();
+//		jobManager.setJobTree(rootJob);
+//		jobManager.setNumberOfRepeat(Integer.MAX_VALUE);
+//		jobManager.setTerminationWaitTime(3000);
+//		
+////		Thread thread=new Thread(manager);
+////		thread.start();
+////		
+////		try {
+////		thread.join();
+////		} catch (InterruptedException e2) {
+////		// TODO Auto-generated catch block
+////		e2.printStackTrace();
+////		}
+////		
+////		System.out.println("Application ends");
 
-		String destUri = "ws://143.248.187.70:9000/text";
+		String destUri = "ws://192.168.1.187:9000/text";
 		if (args.length > 1) {
 			destUri = args[1];
 		}
@@ -66,12 +66,14 @@ public class StartClient {
 			e1.printStackTrace();
 		}
 		
-		String filePath=new String("/home/sglee/download");
+//		String filePath=new String("/home/sglee/download");
+//		
+//		//CommandRepository commandRepository=(CommandRepository)CommandRepository.getInstance();
+//		//commandRepository.put(CommandWriteFile.getCommandName(), new CommandWriteFile(filePath));
+//		
+//		MessageHandler automatedMessageHandler=new AutomatedMessageHandler();
 		
-		//CommandRepository commandRepository=(CommandRepository)CommandRepository.getInstance();
-		//commandRepository.put(CommandWriteFile.getCommandName(), new CommandWriteFile(filePath));
-		
-		MessageHandler automatedMessageHandler=new AutomatedMessageHandler();
+		MessageHandler textHandler=new TextHandler();
 		
 		String connectionId="clientCon";
 		JettyWSConnectionPool connectionPool=new JettyWSConnectionPool(connectionId,uri,connectionSize,300,100,2000);
@@ -87,7 +89,7 @@ public class StartClient {
 		
 		
 		MessageQueue mq=new MessageQueue(connection.getId());
-		mq.setJobManager(jobManager);
+//		mq.setJobManager(jobManager);
 		MessageQueueRepository mqRepository=MessageQueueRepository.getInstance();
 		mqRepository.put(connection.getId(),mq);
 		
