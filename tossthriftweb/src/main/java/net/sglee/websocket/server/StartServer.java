@@ -16,13 +16,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @ComponentScan("net.sglee.websocket.server")
+//@ComponentScan("net.sglee.kafka.producer.command,net.sglee.kafka.producer.model,net.sglee.kafka.producer,net.sglee.kafka.consumer.control")
+//@EnableAutoConfiguration
+//@Configuration tags the class as a source of bean definitions for the application context.
+//@EnableAutoConfiguration tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.
+//Normally you would add @EnableWebMvc for a Spring MVC app, but Spring Boot adds it automatically when it sees spring-webmvc on the classpath. This flags the application as a web application and activates key behaviors such as setting up a DispatcherServlet.
+//@ComponentScan tells Spring to look for other components, configurations, and services in the hello package, allowing it to find the GreetingController.
 @SpringBootApplication
 @Component
-public class StartWebsocketServer {
+public class StartServer {
+
 	public static void start(String args[]) {
-		ApplicationContext ctx=SpringApplication.run(StartWebsocketServer.class,args);
+		ApplicationContext ctx=SpringApplication.run(StartServer.class,args);
 	}
-	private static final Logger logger = LoggerFactory.getLogger(StartWebsocketServer.class);
+	private static final Logger logger = LoggerFactory.getLogger(StartServer.class);
 	
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
