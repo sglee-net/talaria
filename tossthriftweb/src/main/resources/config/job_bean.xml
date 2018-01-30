@@ -1,0 +1,54 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+<bean id="root" class="net.sglee.automation.jobcontrol.JobComposite">
+	<property name="name" value="root" />
+	<property name="subJobs">
+		<map>
+			<entry key="compositeNode1" value-ref="compositeNode1" />
+			<entry key="compositeNode2" value-ref="compositeNode2" />
+		</map>
+	</property>
+</bean>
+
+<bean id="compositeNode1" class="net.sglee.automation.jobcontrol.JobComposite">
+	<property name="name" value="compositeNode1" />
+	<property name="priority" value="1" />
+	<property name="subJobs">
+		<map>
+			<entry key="leafNode1" value-ref="leafNode1" />
+		</map>
+	</property>
+</bean>
+
+<bean id="compositeNode2" class="net.sglee.automation.jobcontrol.JobComposite">
+	<property name="name" value="compositeNode2" />
+	<property name="priority" value="1" />
+	<property name="subJobs">
+		<map>
+			<entry key="leafNode2" value-ref="leafNode2" />
+		</map>
+	</property>
+</bean>
+
+<bean id="leafNode1" class="net.sglee.automation.jobcontrol.JobLeaf">
+	<property name="name" value="leafNode1" />
+	<property name="command" ref="command1" />
+</bean>
+
+<bean id="leafNode2" class="net.sglee.automation.jobcontrol.JobLeaf">
+	<property name="name" value="leafNode2" />
+	<property name="command" ref="command2" />
+</bean>
+
+<bean id="command1" class="net.sglee.automation.jobcontrol.command.Sleep">
+	<property name="sleepingTime" value="1000" />
+</bean>
+
+<bean id="command2" class="net.sglee.automation.jobcontrol.command.Sleep">
+	<property name="sleepingTime" value="3000" />
+</bean>
+
+</beans>

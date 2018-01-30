@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 //import javax.servlet.ServletException;
 //import javax.servlet.annotation.WebServlet;
@@ -29,5 +30,10 @@ public class Greeting {
 	public String sayHello(Model model) {
 //		model.addAttribute("message","Hello Spring MVC!");
 		return "chart";
+	}
+	
+	@RequestMapping(value = "/getString", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody String testJson() {
+		return "{\"success\":1}";
 	}
 }

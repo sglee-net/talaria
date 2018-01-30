@@ -28,37 +28,37 @@ public class TransferServiceHandler implements TransferService.Iface {
 	@Override
 	public void writeBool(boolean _v) throws TException {
 		// TODO Auto-generated method stub
-		
+		System.out.println(_v);
 	}
 
 	@Override
 	public void writeI16(short _v) throws TException {
 		// TODO Auto-generated method stub
-		
+		System.out.println(_v);
 	}
 
 	@Override
 	public void writeI32(int _v) throws TException {
 		// TODO Auto-generated method stub
-		
+		System.out.println(_v);
 	}
 
 	@Override
 	public void writeI64(long _v) throws TException {
 		// TODO Auto-generated method stub
-		
+		System.out.println(_v);
 	}
 
 	@Override
 	public void writeDouble(double _v) throws TException {
 		// TODO Auto-generated method stub
-		
+		System.out.println(_v);
 	}
 
 	@Override
 	public void writeString(String _v) throws TException {
 		// TODO Auto-generated method stub
-		
+		System.out.println(_v);
 	}
 
 	@Override
