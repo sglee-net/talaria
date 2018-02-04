@@ -18,10 +18,10 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sglee.websocket.Message;
-import net.sglee.websocket.MessageQueue;
 import net.sglee.websocket.MessageQueueRepository;
 import net.sglee.websocket.SessionRepository;
+import net.sglee.websocket.common.Message;
+import net.sglee.websocket.common.MessageQueue;
 
 @WebSocket(maxTextMessageSize = 64 * 1024)
 public class JettyWSConnection implements Runnable {

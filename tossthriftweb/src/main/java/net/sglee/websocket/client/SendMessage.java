@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.websocket.api.Session;
 
-import net.sglee.websocket.Message;
+import net.sglee.websocket.common.Message;
 
 public class SendMessage implements Runnable {
 

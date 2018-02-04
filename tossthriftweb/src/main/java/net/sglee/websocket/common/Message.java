@@ -1,4 +1,4 @@
-package net.sglee.websocket;
+package net.sglee.websocket.common;
 
 public class Message {
 	@SuppressWarnings("unused")

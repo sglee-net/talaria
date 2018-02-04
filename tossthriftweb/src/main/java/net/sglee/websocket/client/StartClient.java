@@ -8,9 +8,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-//import net.sglee.automation.jobcontrol.Job;
-import net.sglee.websocket.MessageQueue;
 import net.sglee.websocket.MessageQueueRepository;
+import net.sglee.websocket.common.MessageQueue;
 
 @ComponentScan("net.sglee.websocket.client")
 //@SpringBootApplication
@@ -58,7 +57,7 @@ public class StartClient {
 			destUri = args[1];
 		}
 		
-		final int connectionSize=1;
+		final int connectionSize=3;
 		URI uri=null;
 		try {
 			uri = new URI(destUri);
@@ -104,7 +103,7 @@ public class StartClient {
 		
 		//       while(!connectionPool.isStopped()) {
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

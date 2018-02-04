@@ -1,4 +1,4 @@
-package net.sglee.websocket;
+package net.sglee.websocket.common;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

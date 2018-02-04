@@ -5,8 +5,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import net.sglee.websocket.Message;
 import net.sglee.websocket.Session;
+import net.sglee.websocket.common.Message;
 
 public class JettySession implements Session {
 	@SuppressWarnings("unused")

@@ -45,15 +45,23 @@ public class TextHandler extends TextWebSocketHandler {
 //
 //			}
 			
-			logger.info("message is "+_message);
+			logger.info("message id: "+ sessionId + ", message is "+_message);
 			
 			try {
 				_session.sendMessage(new TextMessage("This is a server " + String.valueOf(i)));
-				logger.info("server handle is called");
+//				logger.info("server handle is called");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}//"Hello, I am a server, time: "+System.currentTimeMillis()+", index: "+i
+			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			i++;
 			
 			
