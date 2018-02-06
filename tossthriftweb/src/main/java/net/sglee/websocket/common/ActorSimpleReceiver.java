@@ -17,15 +17,15 @@ public class ActorSimpleReceiver implements Actor<Message,String> {
 		this.postActionActor = postActionActor;
 	}
 
-	private void doPreAction() {
+	private void handleHead() {
 		messageQueue = new ConcurrentLinkedQueue<String>();
 	}
 	
-	private void doMainAction(String _str) {
+	private void handleBody(String _str) {
 		messageQueue.add(_str);
 	}
 	
-	private void doPostAction() {
+	private void handleTail() {
 		if(postActionActor == null) {
 			return;
 		}
@@ -65,14 +65,14 @@ public class ActorSimpleReceiver implements Actor<Message,String> {
 			if(rootObject != null) {
 				JsonNode node = rootObject.get("type");
 				switch(node.asText()) {
-				case "pre":
-					doPreAction();
+				case "head":
+					handleHead();
 					break;
-				case "main":
-					doMainAction(rootObject.get("data").asText());
+				case "body":
+					handleBody(rootObject.get("body").asText());
 					break;
-				case "post":
-					doPostAction();
+				case "tail":
+					handleTail();
 					break;
 				default:
 					break;
