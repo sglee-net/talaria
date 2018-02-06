@@ -11,7 +11,7 @@ public class ActorSimpleSender implements Actor<Message,String> {
 	@Override
 	public String send(String _obj) {
 		// TODO Auto-generated method stub
-		return new String("this is a client");
+		return _obj;
 	}
 
 }
