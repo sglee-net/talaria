@@ -18,10 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-@ComponentScan("net.sglee.talaria.websocket.server")
-@SpringBootApplication
-@EnableAutoConfiguration
-@Component
+//@ComponentScan("net.sglee.talaria.websocket.server")
+//@Component
 
 //@EnableAutoConfiguration
 //@Configuration tags the class as a source of bean definitions for the application context.
@@ -31,6 +29,8 @@ import org.springframework.stereotype.Component;
 
 @Configuration
 @ComponentScan
+@SpringBootApplication
+@EnableAutoConfiguration
 public class StartServer {
 	@Autowired
 	private static WebsocketProperties properties;
@@ -43,7 +43,7 @@ public class StartServer {
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 	    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
-	    factory.setPort(8080);//Integer.parseInt(properties.getServerPort()));//
+	    factory.setPort(Integer.parseInt(properties.getServerPort()));//8080);//
 	    factory.setSessionTimeout(10, TimeUnit.MINUTES); // Integer.parseInt(properties.getSessionTimeout())
 //	    factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.html"));
 	    return factory;
