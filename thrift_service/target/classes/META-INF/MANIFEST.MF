@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
-Implementation-Title: thrift-service
+Implementation-Title: thrift_service
 Implementation-Version: 0.0.1-SNAPSHOT
 Built-By: sglee
-Implementation-Vendor-Id: net.sglee
+Implementation-Vendor-Id: thrift_service
 Build-Jdk: 1.8.0_151
-Implementation-URL: http://projects.spring.io/spring-boot/thrift-servi
+Implementation-URL: http://projects.spring.io/spring-boot/thrift_servi
  ce/
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
