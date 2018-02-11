@@ -15,18 +15,18 @@
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <scope>test</scope>
-	    <exclusions>
-	        <exclusion>
-	            <groupId>org.hamcrest</groupId>
-	            <artifactId>hamcrest-core</artifactId>
-	        </exclusion>
-	    </exclusions>
+<!-- 	    <exclusions> -->
+<!-- 	        <exclusion> -->
+<!-- 	            <groupId>org.hamcrest</groupId> -->
+<!-- 	            <artifactId>hamcrest-core</artifactId> -->
+<!-- 	        </exclusion> -->
+<!-- 	    </exclusions> -->
 	</dependency>
-	<dependency>
-	    <groupId>org.hamcrest</groupId>
-	    <artifactId>hamcrest-library</artifactId>
-	    <scope>test</scope>
-	</dependency>
+<!-- 	<dependency> -->
+<!-- 	    <groupId>org.hamcrest</groupId> -->
+<!-- 	    <artifactId>hamcrest-library</artifactId> -->
+<!-- 	    <scope>test</scope> -->
+<!-- 	</dependency> -->
 	
 <!-- 	<dependency> -->
 <!-- 	    <groupId>org.springframework</groupId> -->
@@ -38,29 +38,26 @@
 <!-- 	    <scope>test</scope> -->
 <!-- 	</dependency> -->
     
- 	<dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-websocket</artifactId>
-	</dependency>   
+<!--  	<dependency> -->
+<!-- 		<groupId>org.springframework</groupId> -->
+<!-- 		<artifactId>spring-websocket</artifactId> -->
+<!-- 	</dependency>    -->
     
-    <dependency>
-		<groupId>org.springframework</groupId>
-		<artifactId>spring-messaging</artifactId>
-	</dependency>
+<!--     <dependency> -->
+<!-- 		<groupId>org.springframework</groupId> -->
+<!-- 		<artifactId>spring-messaging</artifactId> -->
+<!-- 	</dependency> -->
 	
- 	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot -->
 <!-- 	<dependency> -->
 <!-- 	    <groupId>org.springframework.boot</groupId> -->
 <!-- 	    <artifactId>spring-boot</artifactId> -->
 <!-- 	</dependency> -->
 
-	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter -->
-<!-- 	<dependency> -->
-<!-- 	    <groupId>org.springframework.boot</groupId> -->
-<!-- 	    <artifactId>spring-boot-starter</artifactId> -->
-<!-- 	</dependency> -->
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter</artifactId>
+	</dependency>
     
-    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
 	<dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-web</artifactId>

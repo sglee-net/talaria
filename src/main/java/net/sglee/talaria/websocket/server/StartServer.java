@@ -11,12 +11,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 //import org.springframework.boot.context.embedded.ErrorPage;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.ContextConfiguration;
 
 //@ComponentScan("net.sglee.talaria.websocket.server")
 //@Component
@@ -29,23 +31,35 @@ import org.springframework.stereotype.Component;
 
 @Configuration
 @ComponentScan
-@SpringBootApplication
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
+@ContextConfiguration(classes = {WebsocketProperties.class})
 public class StartServer {
 	@Autowired
 	private static WebsocketProperties properties;
 	
 	public static void run(String args[]) {
-		ApplicationContext ctx=SpringApplication.run(StartServer.class,args);
+		ApplicationContext context = SpringApplication.run(StartServer.class,args);
+		
+//		WebsocketProperties properties = context.getBean(WebsocketProperties.class);
+		System.out.println(properties.getServerPort());
 	}
 	private static final Logger logger = LoggerFactory.getLogger(StartServer.class);
 	
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
+//		System.out.println(properties.getServerPort());
+		
 	    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
-	    factory.setPort(Integer.parseInt(properties.getServerPort()));//8080);//
-	    factory.setSessionTimeout(10, TimeUnit.MINUTES); // Integer.parseInt(properties.getSessionTimeout())
+	    factory.setPort(
+	    		8080
+	    		//Integer.parseInt(properties.getServerPort())//);//8080);//properties.getEnv().getProperty("server.port"))
+	    		);
+	    factory.setSessionTimeout(
+	    		10,
+	    		//Integer.parseInt(properties.getSessionTimeout()), //properties.getEnv().getProperty("server.sessionTimeout")
+	    		TimeUnit.MINUTES);//Integer.parseInt(properties.getSessionTimeout()), TimeUnit.MINUTES); // 
 //	    factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.html"));
 	    return factory;
 	}
+	
 }

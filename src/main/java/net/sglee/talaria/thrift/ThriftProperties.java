@@ -2,18 +2,20 @@ package net.sglee.talaria.thrift;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-//@Configuration
+
+@Configuration
 @PropertySources({
 	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:./config/thrift.properties")
 	})
 public class ThriftProperties {
 	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 	
