@@ -17,11 +17,15 @@ import org.springframework.validation.annotation.Validated;
 
 //@Validated
 //@Configuration
-//@ConfigurationProperties(prefix="server")
-@PropertySources({
-	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:./config/websocket.properties")
-	})
+//@ConfigurationProperties(prefix="ws.server")
+//@PropertySources({
+//	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+//	@PropertySource("classpath:./config/websocket.properties")
+//	})
+//@PropertySources({
+//@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+//@PropertySource("classpath:application.properties")
+//})
 @Component
 public class WebsocketProperties {
 //	@Bean

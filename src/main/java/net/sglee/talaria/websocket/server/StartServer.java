@@ -40,7 +40,7 @@ public class StartServer {
 	public static void run(String args[]) {
 		ApplicationContext context = SpringApplication.run(StartServer.class,args);
 		
-//		WebsocketProperties properties = context.getBean(WebsocketProperties.class);
+		WebsocketProperties properties = context.getBean(WebsocketProperties.class);
 		System.out.println(properties.getServerPort());
 	}
 	private static final Logger logger = LoggerFactory.getLogger(StartServer.class);

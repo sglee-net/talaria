@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import net.sglee.automation.jobcontrol.Application;
@@ -15,9 +16,7 @@ import net.sglee.talaria.websocket.server.WebsocketProperties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebsocketProperties.class})
-//@SpringBootTest
-//@EnableConfigurationProperties(WebsocketProperties.class)
-//@SpringApplicationConfiguration(classes = {Application.class})
+@TestPropertySource("classpath:application.properties")
 public class WebsocketTest {
 	@Autowired
 	private WebsocketProperties properties;

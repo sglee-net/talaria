@@ -1,4 +1,4 @@
-package net.sglee.talaria.conn.websocket;
+package net.sglee.talaria.websocket.client;
 
 public class RequestInformation {
 	private long firstRequestedTime;

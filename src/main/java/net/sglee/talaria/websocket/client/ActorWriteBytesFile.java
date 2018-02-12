@@ -1,4 +1,4 @@
-package net.sglee.talaria.conn.websocket;
+package net.sglee.talaria.websocket.client;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
