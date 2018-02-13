@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,11 +17,10 @@ import net.sglee.talaria.websocket.server.WebsocketProperties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {WebsocketProperties.class})
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource("classpath:./config/websocket.properties")
 public class WebsocketTest {
 	@Autowired
 	private WebsocketProperties properties;
-//	private WebsocketProperties properties = new WebsocketProperties();
 	
 	@Test 
 	public void getSeverProperties() {
