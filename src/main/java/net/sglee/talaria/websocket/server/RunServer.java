@@ -26,6 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class RunServer {
 	private static final Logger logger = LoggerFactory.getLogger(RunServer.class);
 
+	// the method for the injection of a global variable
 	static private WebsocketProperties properties;
 	@Autowired(required = true)
 	void setProperties(WebsocketProperties _prop) {
