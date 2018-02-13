@@ -18,15 +18,25 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.sglee.talaria.websocket.client.MessageQueueRepository;
-import net.sglee.talaria.websocket.client.SessionRepository;
-import net.sglee.talaria.websocket.client.Message;
-import net.sglee.talaria.websocket.client.MessageQueue;
-
 @WebSocket(maxTextMessageSize = 64 * 1024)
 public class JettyWSConnection implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(JettyWSConnection.class);
 
+	private Handler<Message> receiver = null;
+	public void setReceiver(Handler<Message> _obj) {
+		receiver = _obj;
+	}
+	
+	private Handler<Message> messageGenerator = null;
+	public void setMessageGenerator(Handler<Message> _obj) {
+		messageGenerator = _obj;
+	}
+	
+	private Handler<Message> sender = null;
+	public void setSender(Handler<Message> _obj) {
+		sender = _obj;
+	}
+	
 	private boolean isActivated=false;
 
 	public synchronized boolean isActivated() {
@@ -60,18 +70,6 @@ public class JettyWSConnection implements Runnable {
 	public int getChannelNo() {
 		return channelNo;
 	}
-
-//	private MessageHandler textMessageHandler=null;
-//	
-//	public void setTextMessageHandler(MessageHandler textMessageHandler) {
-//		this.textMessageHandler = textMessageHandler;
-//	}
-//
-//	private MessageHandler bynaryMessageHandler=null;
-//	
-//	public void setBynaryMessageHandler(MessageHandler bynaryMessageHandler) {
-//		this.bynaryMessageHandler = bynaryMessageHandler;
-//	}
 	
 	private long waitingTimeDuringRunning=1000;
 	
@@ -279,102 +277,67 @@ public class JettyWSConnection implements Runnable {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        
-        JettySession jettySession=new JettySession(session, 2000);
-        SessionRepository sessionRepository=SessionRepository.getInstance();
-        sessionRepository.put(this.getId(),jettySession);
-        jettySession.sendMessage("Hello, this is a client. Thnaks for connection");
     }
 
     int i=0;
     
     @OnWebSocketMessage
-    public void onMessage(byte[] _bytes,int _offset,int _length) {
-    	if(!this.isConnected() || !this.isActivated()) { //  || bynaryMessageHandler==null
+    public void onMessage(byte[] _bytes,int _offset,int _length) throws Exception {
+    	if(!this.isConnected() || !this.isActivated()) {
     		return;
     	}
     	
-//    	String reply=bynaryMessageHandler.handleBynaryMessage(_bytes, _offset, _length);
-//    	if(reply!=null) {
-//    		this.sendMessage(reply);
-//    	}
+    	Message message = new Message(_bytes, _offset, _length);
     	
-    	MessageQueueRepository mqRepo=MessageQueueRepository.getInstance();
-    	MessageQueue mq=mqRepo.get(this.getId());
-    	Message message=new Message(_bytes,_offset,_length);
-    	if(!mq.add(message)) {
-    		logger.error("message is not added to messagequeue");
+    	if(this.receiver != null) {
+    		receiver.execute(message);
     	}
-    	
-//    	SessionRepository sessionRepository=SessionRepository.getInstance();
-//    	net.sglee.websocket.Session session=sessionRepository.get(this.getId());
-//    	session.sendMessage(message);
-    	
     }
     
     @OnWebSocketMessage
-    public void onMessage(String _msg) {
+    public void onMessage(String _msg) throws Exception {
     	synchronized(this) {
 	    	if(!this.isConnected() || !this.isActivated()) { //  || textMessageHandler==null
 	        	return;
 	    	}
-	
-	    	logger.info("onMessage, " + "client id: " + this.id + ", Index: " + i + ", Got msg: " + _msg);
 	    	
-//	    	String reply=textMessageHandler.handleTextMessage(_msg);
+	    	Message message = new Message(_msg);
 	    	
-	    	try {
-				Thread.sleep(this.getWaitingTimeDuringRunning());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	    	
-//	    	if(reply!=null) {
-	    		this.sendMessage(String.valueOf(i));
-//	    	}
-	    	
-	    	
-	    	MessageQueueRepository mqRepo=MessageQueueRepository.getInstance();
-	    	MessageQueue mq=mqRepo.get(this.getId());
-	    	if(mq==null) {
-	    		logger.error("MQ is null, the Id of this is "+this.getId());
-	    		return;
+	    	if(this.receiver != null) {
+	    		receiver.execute(message);
 	    	}
 	    	
-	    	Message message=new Message(_msg,_msg);
-	    	if(!mq.add(message)) {
-	    		logger.error("message is not added to messagequeue");
+	    	Message reply = null;
+	    	if(this.messageGenerator != null) {
+	    		reply = (Message)(messageGenerator.execute(message));
 	    	}
-			
-//	    	SessionRepository sessionRepository=SessionRepository.getInstance();
-//	    	net.sglee.websocket.Session session=sessionRepository.get(this.getId());
-//	    	session.sendMessage(message);
 	    	
-	        i++;
+	    	if(this.sender != null && reply != null) {
+	    		sender.execute(reply);
+	    	}
     	}
     }
     
-    public void sendMessage(String _msg) {
-    	if(session==null) {
-    		return;
-    	}
-    	
-    	Future<Void> fut;
-        fut = session.getRemote().sendStringByFuture(_msg);
-        try {
-			fut.get(getTimeout(),TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TimeoutException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // wait for send to complete.     
-    }
+//    public void sendMessage(String _msg) {
+//    	if(session==null) {
+//    		return;
+//    	}
+//    	
+//    	Future<Void> fut;
+//        fut = session.getRemote().sendStringByFuture(_msg);
+//        try {
+//			fut.get(getTimeout(),TimeUnit.MILLISECONDS);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (TimeoutException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} // wait for send to complete.     
+//    }
     
     public void run() {
     	logger.info("JettyWSConnection is running");

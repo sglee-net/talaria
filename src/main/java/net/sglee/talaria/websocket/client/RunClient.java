@@ -55,10 +55,9 @@ public class RunClient {
 			e1.printStackTrace();
 		}
 			
-		MessageHandler handler =new MessageHandlerThrift();
 		
-		String connectionId="clientCon";
-		connectionPool=new JettyWSConnectionPool(connectionId,uri,connectionSize,300,100,2000);
+		String connectionId = "clientCon";
+		connectionPool = new JettyWSConnectionPool(connectionId,uri,connectionSize,300,100,2000);
 //		for(int i=0;i<connectionSize;i++) {
 //			JettyWSConnection connection=connectionPool.getConnection();
 //			System.out.println(connection.getId()+", connected");
@@ -69,13 +68,19 @@ public class RunClient {
 		
 		connection=connectionPool.getConnection();
 		
+		Handler<Message> handlerReceiver = 
+				new HandlerReceiverSimple();
+		connection.setReceiver(handlerReceiver);
+		Handler<Message> handlerSender = 
+				new HandlerSenderSimple(connection.getSession(),connection.getTimeout());
+		connection.setSender(handlerReceiver);
 		
-		MessageQueue mq=new MessageQueue(connection.getId());
-		mq.setMessageHandler(handler);
-		MessageQueueRepository mqRepository=MessageQueueRepository.getInstance();
-		mqRepository.put(connection.getId(),mq);
+//		MessageQueue mq=new MessageQueue(connection.getId());
+//		mq.setMessageHandler(handler);
+//		MessageQueueRepository mqRepository=MessageQueueRepository.getInstance();
+//		mqRepository.put(connection.getId(),mq);
 		
-		connection.sendMessage("This is client");
+//		connection.sendMessage("This is client");
 		System.out.println(connection.getId()+", connected");
 
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook(connectionPool));

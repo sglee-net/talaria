@@ -15,12 +15,18 @@ public class Message {
 		return type;
 	}
 	
+	public Message(String _message) {
+		this.setMessage(_message);
+		timeStamp = System.currentTimeMillis();
+		referenceCount=0;
+		type=MESSAGE_TYPE.STRING;
+	}
+	
 	public Message(String _message,String _paylaod) {
 		this.setMessage(_message);
 		this.setPayload(_paylaod);
 		timeStamp = System.currentTimeMillis();
 		referenceCount=0;
-		
 		type=MESSAGE_TYPE.STRING;
 	}
 	
@@ -28,7 +34,6 @@ public class Message {
 		bytes=_bytes;
 		offset=_offset;
 		length=_length;
-		
 		type=MESSAGE_TYPE.BINARY;
 	}
 	
@@ -105,6 +110,16 @@ public class Message {
 		referenceCount--;
 		if(referenceCount < 0) {
 			referenceCount=0;
+		}
+	}
+	
+	public String toString() {
+		if(type == Message.MESSAGE_TYPE.STRING) {
+			String msg="";
+			return msg;
+		} else {
+			String msg="";
+			return msg;
 		}
 	}
 }

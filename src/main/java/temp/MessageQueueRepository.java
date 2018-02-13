@@ -1,4 +1,4 @@
-package net.sglee.talaria.websocket.client;
+package temp;
 
 import net.sglee.util.collection.GenericConcurrentHashMap;
 
