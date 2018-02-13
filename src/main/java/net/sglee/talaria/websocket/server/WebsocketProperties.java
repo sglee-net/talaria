@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 //@Validated
-//@Configuration
-//@ConfigurationProperties(prefix="server")
+@Configuration
+@ConfigurationProperties(prefix="ws.server")
 @PropertySources({
 	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:./config/websocket.properties")
@@ -45,7 +45,7 @@ public class WebsocketProperties {
 //		return serverIp;
 //	}
 	
-	@Value("${ws.server.port}")
+//	@Value("${port}")
 //	@Valid
 //	@NotNull
 	private String port;
@@ -53,7 +53,7 @@ public class WebsocketProperties {
 		return port;
 	}
 	
-	@Value("${ws.server.sessionTimeout}")
+//	@Value("${sessionTimeout}")
 //	@Valid
 //	@NotNull
 	private String sessionTimeout;

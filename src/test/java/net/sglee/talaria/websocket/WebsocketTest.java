@@ -14,9 +14,9 @@ import net.sglee.automation.jobcontrol.Application;
 import net.sglee.talaria.websocket.server.WebsocketProperties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {WebsocketProperties.class})
+//@ContextConfiguration(classes = {WebsocketProperties.class})
 //@SpringBootTest
-//@EnableConfigurationProperties(WebsocketProperties.class)
+@EnableConfigurationProperties(WebsocketProperties.class)
 //@SpringApplicationConfiguration(classes = {Application.class})
 public class WebsocketTest {
 	@Autowired
