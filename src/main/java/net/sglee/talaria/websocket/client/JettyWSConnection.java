@@ -297,19 +297,19 @@ public class JettyWSConnection implements Runnable {
     @OnWebSocketMessage
     public void onMessage(String _msg) throws Exception {
     	synchronized(this) {
-	    	if(!this.isConnected() || !this.isActivated()) { //  || textMessageHandler==null
+	    	if(!this.isConnected() || !this.isActivated()) {
 	        	return;
 	    	}
 	    	
 	    	Message message = new Message(_msg);
-	    	
+	    	Message result = null;
 	    	if(this.receiver != null) {
-	    		receiver.execute(message);
+	    		result = (Message)receiver.execute(message);
 	    	}
 	    	
 	    	Message reply = null;
 	    	if(this.messageGenerator != null) {
-	    		reply = (Message)(messageGenerator.execute(message));
+	    		reply = (Message)messageGenerator.execute(result);
 	    	}
 	    	
 	    	if(this.sender != null && reply != null) {
@@ -317,27 +317,6 @@ public class JettyWSConnection implements Runnable {
 	    	}
     	}
     }
-    
-//    public void sendMessage(String _msg) {
-//    	if(session==null) {
-//    		return;
-//    	}
-//    	
-//    	Future<Void> fut;
-//        fut = session.getRemote().sendStringByFuture(_msg);
-//        try {
-//			fut.get(getTimeout(),TimeUnit.MILLISECONDS);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (TimeoutException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} // wait for send to complete.     
-//    }
     
     public void run() {
     	logger.info("JettyWSConnection is running");
