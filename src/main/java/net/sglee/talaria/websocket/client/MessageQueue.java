@@ -1,4 +1,4 @@
-package net.sglee.talaria.conn.websocket;
+package net.sglee.talaria.websocket.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +8,11 @@ import net.sglee.util.collection.GenericConcurrentLinkedQueue;
 
 public class MessageQueue extends GenericConcurrentLinkedQueue<Message> {
 	private static final Logger logger = LoggerFactory.getLogger(MessageQueue.class);
+	
+	private MessageHandler messageHandler = null;
+	public void setMessageHandler(MessageHandler _handler) {
+		messageHandler = _handler;
+	}
 	
 	@SuppressWarnings("unused")
 	private MessageQueue() {}
@@ -46,6 +51,10 @@ public class MessageQueue extends GenericConcurrentLinkedQueue<Message> {
 		Message message=this.poll(); // this.peak();
 		if(message==null) {
 			return;
+		}
+		
+		if(messageHandler != null) {
+			messageHandler.executeMessages(this);
 		}
 ////		for(Job job : messageHandler.values()) {
 ////			job.receiveObject(message);

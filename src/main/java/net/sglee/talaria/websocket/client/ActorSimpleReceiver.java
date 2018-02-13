@@ -1,4 +1,4 @@
-package net.sglee.talaria.conn.websocket;
+package net.sglee.talaria.websocket.client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
