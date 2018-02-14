@@ -3,10 +3,24 @@ package net.sglee.talaria.websocket.client;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+
+import net.sglee.talaria.websocket.common.WebsocketProperties;
+
+@ComponentScan("net.sglee.talaria.websocket.common")
+@ComponentScan
 public class RunClient {
+	// the method for the injection of a global variable
+	static private WebsocketProperties properties;
+	@Autowired(required = true)
+	void setProperties(WebsocketProperties _prop) {
+		properties = _prop;
+	}
+	
 	private static JettyWSConnectionPool connectionPool = null;
 	private static JettyWSConnection connection = null;
-	
+		
 	public static void start(String args[]) {
 //		ApplicationContext context = new ClassPathXmlApplicationContext("./config/job_bean.xml");		
 //		net.sglee.automation.jobcontrol.Job rootJob = (net.sglee.automation.jobcontrol.Job)context.getBean("root");
@@ -42,7 +56,8 @@ public class RunClient {
 ////		
 ////		System.out.println("Application ends");
 
-		String destUri = "ws://192.168.1.187:9000/text";
+		//String destUri = properties.getClientTargetURL(); //"ws://192.168.1.187:9000/text";
+		String destUri = "ws://192.168.1.41:8080/text";
 		if (args.length > 1) {
 			destUri = args[1];
 		}

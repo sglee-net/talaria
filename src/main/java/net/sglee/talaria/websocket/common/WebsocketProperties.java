@@ -1,4 +1,4 @@
-package net.sglee.talaria.websocket.server;
+package net.sglee.talaria.websocket.common;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -39,5 +39,13 @@ public class WebsocketProperties {
 	private String sessionTimeout;
 	public String getSessionTimeout() {
 		return sessionTimeout;
+	}
+	
+	@Value("${client.targetURL}")
+	@Valid
+	@NotNull
+	private String clientTargetURL;
+	public String getClientTargetURL() {
+		return clientTargetURL;
 	}
 }

@@ -13,7 +13,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.test.context.ContextConfiguration;
+
+import net.sglee.talaria.websocket.common.WebsocketProperties;
 
 //@EnableAutoConfiguration
 //@Configuration tags the class as a source of bean definitions for the application context.
@@ -22,6 +26,8 @@ import org.springframework.test.context.ContextConfiguration;
 //@ComponentScan tells Spring to look for other components, configurations, and services in the hello package, allowing it to find the GreetingController.
 
 //@Configuration
+
+@ComponentScan("net.sglee.talaria.websocket.common")
 @ComponentScan
 public class RunServer {
 	private static final Logger logger = LoggerFactory.getLogger(RunServer.class);
