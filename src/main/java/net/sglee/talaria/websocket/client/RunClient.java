@@ -2,7 +2,10 @@ package net.sglee.talaria.websocket.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -57,7 +60,7 @@ public class RunClient {
 ////		System.out.println("Application ends");
 
 		//String destUri = properties.getClientTargetURL(); //"ws://192.168.1.187:9000/text";
-		String destUri = "ws://192.168.1.41:8080/text";
+		String destUri = "ws://192.168.1.187:8080/text";
 		if (args.length > 1) {
 			destUri = args[1];
 		}
@@ -69,47 +72,76 @@ public class RunClient {
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
-			
-		
 		String connectionId = "clientCon";
-		connectionPool = new JettyWSConnectionPool(connectionId,uri,connectionSize,300,100,2000);
-//		for(int i=0;i<connectionSize;i++) {
-//			JettyWSConnection connection=connectionPool.getConnection();
-//			System.out.println(connection.getId()+", connected");
-//			if(!connectionPool.setConnectionActive(connection)) {
-//				System.out.println("connection is not activated");
-//			}
-//		}
 		
-		connection=connectionPool.getConnection();
-		
+		long currentTime = System.currentTimeMillis();
+		WebSocketClient client = new WebSocketClient();
+        ClientUpgradeRequest request = new ClientUpgradeRequest();
+        connectionId = String.valueOf(currentTime) + connectionId;// + String.valueOf(i);
+        long waitingTimeToStop = 300;
+        long waitingTimeDuringRunning = 100;
+        long timeout = 2000;
+        JettyWSConnection connection=
+				new JettyWSConnection(
+						connectionId,
+						0,
+						client,
+						uri,
+						request,
+						waitingTimeToStop,
+						waitingTimeDuringRunning,
+						timeout);
 		Handler<Message> handlerReceiver = 
-				new HandlerReceiverSimple();
+				new HandlerReceiverSimple<Message>();
 		connection.setReceiver(handlerReceiver);
 		Handler<Message> handlerSender = 
-				new HandlerSenderSimple(connection.getSession(),connection.getTimeout());
-		connection.setSender(handlerReceiver);
+				new HandlerSenderSimple<Message>();//connection.getSession(),connection.getTimeout());
+		connection.setSender(handlerSender);
+		Handler<Message> handlerMessageGenerator = 
+				new HandlerMessageGeneratorSimple<Message>();
+		connection.setMessageGenerator(handlerMessageGenerator);
 		
-//		MessageQueue mq=new MessageQueue(connection.getId());
-//		mq.setMessageHandler(handler);
-//		MessageQueueRepository mqRepository=MessageQueueRepository.getInstance();
-//		mqRepository.put(connection.getId(),mq);
+		connection.connect();
 		
-//		connection.sendMessage("This is client");
-		System.out.println(connection.getId()+", connected");
-
-		Runtime.getRuntime().addShutdownHook(new ShutdownHook(connectionPool));
-		
+//		connectionPool = new JettyWSConnectionPool(connectionId,uri,connectionSize,300,100,2000);
+//		Iterator<JettyWSConnection> iterator = connectionPool.getConnectionIterator();
+//		while(iterator.hasNext()) {
+//			JettyWSConnection connection = iterator.next();
+//			
+//			Handler<Message> handlerReceiver = 
+//					new HandlerReceiverSimple();
+//			connection.setReceiver(handlerReceiver);
+//			Handler<Message> handlerSender = 
+//					new HandlerSenderSimple();//connection.getSession(),connection.getTimeout());
+//			connection.setSender(handlerSender);
+//			Handler<Message> handlerMessageGenerator = 
+//					new HandlerMessageGeneratorSimple();
+//			connection.setMessageGenerator(handlerMessageGenerator);
+//		}
+//		
+//		try {
+//			connectionPool.connect();
+//			JettyWSConnection connection = connectionPool.getConnection();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+				
 	}
 	
 	public static void stop() {
-		assert( connection != null && connectionPool != null );
-		if( connection == null || connectionPool == null ) {
-			return;
+//		assert( connection != null && connectionPool != null );
+//		if( connection == null || connectionPool == null ) {
+//			return;
+//		}
+//		
+//		connectionPool.returnConnection(connection);
+		Runtime.getRuntime().addShutdownHook(new ShutdownHook(connectionPool));
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		
-		connectionPool.returnConnection(connection);
-
 		connectionPool.stop();
 	}
 }

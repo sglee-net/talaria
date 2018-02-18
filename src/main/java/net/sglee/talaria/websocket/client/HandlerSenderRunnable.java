@@ -1,5 +1,6 @@
 package net.sglee.talaria.websocket.client;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -7,7 +8,29 @@ import java.util.concurrent.TimeoutException;
 
 import org.eclipse.jetty.websocket.api.Session;
 
-public class HandlerSenderSimple<T> extends Handler<T> {
+public class HandlerSenderRunnable<T> extends Handler<T> implements Runnable {
+
+	private ConcurrentLinkedQueue<T> linkedQueue = new ConcurrentLinkedQueue<T>();
+	
+	@Override
+	public void run() {
+		synchronized(linkedQueue){
+			if(!linkedQueue.isEmpty()) {
+				T obj = linkedQueue.poll();
+				try {
+					this.execute(obj);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	@Override
+	public synchronized void put(T _obj) throws Exception {
+		linkedQueue.add(_obj);
+	}
 	
 	@Override
 	public Object execute(T _obj) throws Exception {

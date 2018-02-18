@@ -2,6 +2,8 @@ package net.sglee.talaria.websocket.client;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -19,22 +21,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @WebSocket(maxTextMessageSize = 64 * 1024)
-public class JettyWSConnection implements Runnable {
+public class JettyWSConnection<T> implements Runnable {
+	public static String KEY_NAME_SESSION = "session";
+	public static String KEY_NAME_TIMEOUT = "timeout";
+	
 	private static final Logger logger = LoggerFactory.getLogger(JettyWSConnection.class);
 
 	private Handler<Message> receiver = null;
-	public void setReceiver(Handler<Message> _obj) {
-		receiver = _obj;
+	public void setReceiver(Handler<Message> _handler) {
+		receiver = _handler;
 	}
 	
-	private Handler<Message> messageGenerator = null;
-	public void setMessageGenerator(Handler<Message> _obj) {
-		messageGenerator = _obj;
+	private Handler<Object> messageGenerator = null;
+	public void setMessageGenerator(Handler<Object> _handler) {
+		messageGenerator = _handler;
 	}
 	
-	private Handler<Message> sender = null;
-	public void setSender(Handler<Message> _obj) {
-		sender = _obj;
+	private Handler<Object> sender = null;
+	public void setSender(Handler<Object> _handler) {
+		sender = _handler;
+	}
+	
+	private Handler<T> executor = null;
+	public void setExecutor(Handler<T> _handler) {
+		executor = _handler;
+	}
+	public void putToExecutor(T _value) throws Exception {
+		assert(executor != null);
+		if(executor != null) {
+			executor.put(_value);
+		}
 	}
 	
 	private boolean isActivated=false;
@@ -112,18 +128,26 @@ public class JettyWSConnection implements Runnable {
 	}
 
 	// event sequence : connect => onConnect
-	private synchronized void connect() {
+	public synchronized void connect() {
 		logger.info("open() is called.");
 		
 		try {
     		client.start();
-			Future<Session> future=client.connect(this,uri,request);
-			Session result=future.get();
-			if(result==null) {
+			Future<Session> future = client.connect(this,uri,request);
+			Session session = future.get();
+			if(session == null) {
 				logger.error("Websocket client is not connected");
 				return;
 			}
-			this.setSession(result);
+			this.setSession(session);
+			if(this.sender != null) {
+				Map<String,Object> attributes = new HashMap<String,Object>();
+				attributes.put(JettyWSConnection.KEY_NAME_SESSION, session);
+				attributes.put(JettyWSConnection.KEY_NAME_TIMEOUT, this.getTimeout());
+				this.sender.setAttributes(attributes);
+			} else {
+				logger.info("sender is not defined");
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -132,6 +156,7 @@ public class JettyWSConnection implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 //    	this.setActivated(false);
     	this.activate();
     	
@@ -248,7 +273,7 @@ public class JettyWSConnection implements Runnable {
     	this.setWaitingTimeToStop(_waitingTimeToStop);
     	this.setWaitingTimeDuringRunning(_waitingTimeDuringRunning);
     	this.setTimeout(_timeout);
-    	this.connect();
+//    	this.connect();
     }
 
     public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {
@@ -279,6 +304,24 @@ public class JettyWSConnection implements Runnable {
         }
     }
 
+    private Object handleMessage(Message _message) throws Exception {
+		Object temp = null;
+		if(this.receiver != null) {
+			temp = (Object)receiver.execute(_message);
+		}
+		
+		Object reply = null;
+		if(this.messageGenerator != null) {
+			reply = messageGenerator.execute(temp);
+		}
+		
+		if(this.sender != null && reply != null) {
+			return sender.execute(reply);
+		} else {
+			return null;
+		}
+    }
+    
     int i=0;
     
     @OnWebSocketMessage
@@ -288,6 +331,7 @@ public class JettyWSConnection implements Runnable {
     	}
     	
     	Message message = new Message(_bytes, _offset, _length);
+    	handleMessage(message);
     	
     	if(this.receiver != null) {
     		receiver.execute(message);
@@ -300,32 +344,16 @@ public class JettyWSConnection implements Runnable {
 	    	if(!this.isConnected() || !this.isActivated()) {
 	        	return;
 	    	}
-	    	
 	    	Message message = new Message(_msg);
-	    	Message result = null;
-	    	if(this.receiver != null) {
-	    		result = (Message)receiver.execute(message);
-	    	}
-	    	
-	    	Message reply = null;
-	    	if(this.messageGenerator != null) {
-	    		reply = (Message)messageGenerator.execute(result);
-	    	}
-	    	
-	    	if(this.sender != null && reply != null) {
-	    		sender.execute(reply);
-	    	}
+	    	handleMessage(message);
     	}
     }
     
     public void run() {
     	logger.info("JettyWSConnection is running");
     	
-//    	this.setActivated(true);
     	this.activate();
     	while(isActivated()) {
-//    		logger.info("JettyWSConnection is running...");
-
     		try {
 				Thread.sleep(this.getWaitingTimeDuringRunning());
 			} catch (InterruptedException e) {
