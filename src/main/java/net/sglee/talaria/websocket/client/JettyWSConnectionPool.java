@@ -91,7 +91,6 @@ public class JettyWSConnectionPool {
 	}
 
 	private boolean isStopped=false;
-//	private Thread runningThread=null;
 	
 	public synchronized void stop() {
 		// stop this thread
@@ -114,24 +113,24 @@ public class JettyWSConnectionPool {
 			}
 		}
 		
-		if(this.executor!=null) {
-			this.executor.shutdown();
-			try {
-				if (!this.executor.awaitTermination(5, TimeUnit.SECONDS)) {
-					logger.info("아직 처리중인 작업 존재");
-					logger.info("작업 강제 종료 실행");
-			        this.executor.shutdownNow();
-			        if (!this.executor.awaitTermination(5, TimeUnit.SECONDS)) {
-			            logger.info("여전히 종료하지 않은 작업 존재");
-			        }
-			    }
-			} catch (InterruptedException e1) {
-				this.executor.shutdownNow();
-			    Thread.currentThread().interrupt();
-			}
-		} else {
-			logger.info("executor is null");
-		}
+//		if(this.executor!=null) {
+//			this.executor.shutdown();
+//			try {
+//				if (!this.executor.awaitTermination(5, TimeUnit.SECONDS)) {
+//					logger.info("아직 처리중인 작업 존재");
+//					logger.info("작업 강제 종료 실행");
+//			        this.executor.shutdownNow();
+//			        if (!this.executor.awaitTermination(5, TimeUnit.SECONDS)) {
+//			            logger.info("여전히 종료하지 않은 작업 존재");
+//			        }
+//			    }
+//			} catch (InterruptedException e1) {
+//				this.executor.shutdownNow();
+//			    Thread.currentThread().interrupt();
+//			}
+//		} else {
+//			logger.info("executor is null");
+//		}
 		
 		List<Runnable> terminatorList=new ArrayList<Runnable>();
 		Iterator<JettyWSConnection> freeIterator=this.freeConnections.iterator();
@@ -177,7 +176,7 @@ public class JettyWSConnectionPool {
 		return this.isStopped;
 	}
 		
-	private ExecutorService executor=null;
+//	private ExecutorService executor=null;
 	private URI uri=null;
 	private LinkedBlockingQueue<JettyWSConnection> freeConnections = 
 			new LinkedBlockingQueue<JettyWSConnection>();
@@ -217,21 +216,35 @@ public class JettyWSConnectionPool {
 							this.getTimeout());
 			this.putFreeConnection(connection);
 		}
+	}
+	
+	public void connect() throws Exception {
+		int connectionSize = this.freeConnections.size();
 		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		boolean success=true;
-		Iterator<JettyWSConnection> iterator=this.freeConnections.iterator();
+		boolean success = false;
+		Iterator<JettyWSConnection> iterator = this.freeConnections.iterator();
 		while(iterator.hasNext()) {
 			JettyWSConnection connection=iterator.next();
-			if(!connection.isConnected()) {
-				success=false;
-				break;
+			connection.connect();
+		}
+		
+		iterator = this.freeConnections.iterator();
+		while(iterator.hasNext()) {
+			JettyWSConnection connection=iterator.next();
+			int try_count = 0;
+			if(connection.isConnected()) {
+				success = true;
+			} else {
+				while(!connection.isConnected()) {
+					Thread.sleep(500);
+					try_count++;
+					if(try_count>=3) {
+						break;
+					}
+				}
+				if(success == false) {
+					break;
+				}
 			}
 		}
 		
@@ -243,23 +256,21 @@ public class JettyWSConnectionPool {
 				e.printStackTrace();
 			}
 			
-			success=true;
 			iterator=this.freeConnections.iterator();
 			while(iterator.hasNext()) {
 				JettyWSConnection connection=iterator.next();
 				if(!connection.isConnected()) {
-					success=false;
 					break;
 				}
 			}
 		}
 		
-		if(success) {
-			executor=Executors.newFixedThreadPool(_connectionSize+(int)(_connectionSize*0.3));
-		} else {
-			logger.info("connection failed");
-			this.stop();
-		}
+//		if(success) {
+//			executor=Executors.newFixedThreadPool(connectionSize+(int)(connectionSize*0.3));
+//		} else {
+//			logger.info("connection failed");
+//			this.stop();
+//		}		
 	}
 	
 	private void putFreeConnection(JettyWSConnection _connection) {
@@ -288,6 +299,10 @@ public class JettyWSConnectionPool {
 			}
 		}
 		return rt;
+	}
+	
+	public Iterator<JettyWSConnection> getConnectionIterator() {
+		return this.freeConnections.iterator();
 	}
 	
 	public JettyWSConnection getConnection() {
