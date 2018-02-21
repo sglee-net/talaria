@@ -60,7 +60,7 @@ public class RunClient {
 ////		System.out.println("Application ends");
 
 		//String destUri = properties.getClientTargetURL(); //"ws://192.168.1.187:9000/text";
-		String destUri = "ws://192.168.1.187:8080/text";
+		String destUri = "ws://localhost:8080/text";
 		if (args.length > 1) {
 			destUri = args[1];
 		}

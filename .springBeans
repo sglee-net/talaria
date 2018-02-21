@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.9.2.201712210913-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+	</configs>
+	<autoconfigs>
+		<config>java:net.sglee.talaria.thrift.ThriftService</config>
+		<config>java:net.sglee.talaria.thrift.FactoryTTransport</config>
+		<config>java:net.sglee.talaria.websocket.server.spring.Application</config>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

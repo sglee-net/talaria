@@ -19,7 +19,7 @@ public class HandlerSenderSimple<T> extends Handler<T> {
     	}
     	
     	Future<Void> fut;
-        fut = session.getRemote().sendStringByFuture(_obj.toString());
+        fut = session.getRemote().sendStringByFuture("/topic/greetings" + _obj.toString());
         try {
 			fut.get(timeout,TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {

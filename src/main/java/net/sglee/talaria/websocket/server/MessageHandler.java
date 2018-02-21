@@ -20,7 +20,7 @@ public class MessageHandler implements WebSocketConfigurer {
 		registry.addHandler(textMessageHandler(), "/text");
 		registry.addHandler(binaryMessageHandler(), "/binary");
 //		registry.addHandler(pongMessageHandler(), "/pong");
-//		registry.addHandler(textMessageHandler(), "/sockJS").withSockJS();
+		registry.addHandler(textMessageHandler(), "/sockJS").withSockJS();
 	}
 	
 	@Bean
