@@ -18,7 +18,7 @@ public class MessageHandler implements WebSocketConfigurer {
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(textMessageHandler(), "/text");
-		registry.addHandler(binaryMessageHandler(), "/binary");
+//		registry.addHandler(binaryMessageHandler(), "/binary");
 //		registry.addHandler(pongMessageHandler(), "/pong");
 		registry.addHandler(textMessageHandler(), "/sockJS").withSockJS();
 	}
