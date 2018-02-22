@@ -10,8 +10,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
-public class TextMessageHandler extends TextWebSocketHandler{
-	private static final Logger logger = LoggerFactory.getLogger(TextMessageHandler.class);
+public class TextWebSocketHandlerImp extends TextWebSocketHandler {
+	private static final Logger logger = LoggerFactory.getLogger(TextWebSocketHandlerImp.class);
 	private int i=0;
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		synchronized(this) {

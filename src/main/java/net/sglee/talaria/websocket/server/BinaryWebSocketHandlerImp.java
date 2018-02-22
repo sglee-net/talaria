@@ -6,7 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
 @Component
-public class BinaryMessageHandler extends BinaryWebSocketHandler {
+public class BinaryWebSocketHandlerImp extends BinaryWebSocketHandler {
 	public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
 	}
 }
