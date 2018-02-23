@@ -12,20 +12,21 @@ function setConnected(connected) {
     $("#greetings").html("");
 }
 
-function connect() {
+function connect(event) {
 	console.log('prepare');
     var socket = new SockJS('/sockJS');
-    console.log('new sock');
     stompClient = Stomp.over(socket);
-    console.log('stomp over');
-    stompClient.connect({}, function (frame) {
-        setConnected(true);
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body).content);
-        	showGreeting(greeting.body);
-        });
-    });
+    stompClient.connect({}, onConnected, onError); 
+    
+    event.preventDefault();
+}
+
+function onConnected() {
+	setConnected(true);
+	stompClient.subscribe('/topic/reply', onMessageReceived);
+}
+
+function onError(error) {
 }
 
 function disconnect() {
@@ -36,12 +37,13 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
-    stompClient.send("/app/hello", {}, $("#name").val());//JSON.stringify({'name': $("#name").val()}));
+function sendMessage() {
+    stompClient.send("/ap/execute", {}, $("#name").val());//JSON.stringify({'name': $("#name").val()}));
 }
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+function onMessageReceived(payload) {
+	// JSON.parse(payload.body).content
+    $("#greetings").append("<tr><td>" + payload + "</td></tr>");
 }
 
 $(function () {
@@ -50,5 +52,5 @@ $(function () {
     });
     $( "#connect" ).click(function() { connect(); });
     $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+    $( "#send" ).click(function() { sendMessage(); });
 });

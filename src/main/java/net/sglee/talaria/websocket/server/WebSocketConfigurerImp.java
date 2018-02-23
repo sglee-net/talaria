@@ -25,6 +25,7 @@ public class WebSocketConfigurerImp implements WebSocketConfigurer {
 		registry.addHandler(getWebSocketHandlerText(), "/text");
 //		registry.addHandler(getWebSocketHandlerBinary(), "/binary");
 //		registry.addHandler(pongMessageHandler(), "/pong");
+//		registry.addHandler(getWebSocketHandlerText(), "/sockJS").withSockJS();
 //		registry.addHandler(getWebSocketHandlerSockJs(), "/sockJS").withSockJS();
 	}
 
