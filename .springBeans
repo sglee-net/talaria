@@ -9,9 +9,7 @@
 	<configs>
 	</configs>
 	<autoconfigs>
-		<config>java:net.sglee.talaria.thrift.ThriftService</config>
-		<config>java:net.sglee.talaria.thrift.FactoryTTransport</config>
-		<config>java:net.sglee.talaria.websocket.server.spring.Application</config>
+		<config>java:org.chronotics.talaria.websocket.springstompserver.Application</config>
 	</autoconfigs>
 	<configSets>
 	</configSets>

@@ -18,12 +18,12 @@ function connect(event) {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, onConnected, onError); 
     
-    event.preventDefault();
+//    event.preventDefault();
 }
 
 function onConnected() {
 	setConnected(true);
-	stompClient.subscribe('/topic/reply', onMessageReceived);
+	stompClient.subscribe('/topic/vib', onMessageReceived);
 }
 
 function onError(error) {
@@ -43,7 +43,32 @@ function sendMessage() {
 
 function onMessageReceived(payload) {
 	// JSON.parse(payload.body).content
-    $("#greetings").append("<tr><td>" + payload + "</td></tr>");
+//    $("#greetings").append("<tr><td>" + payload.body + "</td></tr>");
+    
+//    if(Number.isInteger(payload.body)) {
+//    	console.log("payload is NaN " + payload.body);
+//    	return;
+//    }
+    if(payload == null || payload.body == null || payload.body == "") {
+    	return;
+    }
+//    var x = new Date();  // current time
+//    var y = parseFloat(payload.body);
+    var jsonObject = JSON.parse(payload.body);
+    var x = new Date(jsonObject.time);
+    var y = parseFloat(jsonObject.value);
+    if(x=="" || y=="") {
+    	return;
+    }
+//    var list = JSON.parse(payload.body).list;
+//    if(list == null || list=="") {
+//    	return;
+//    }
+//    for(var i=0; i<list.length; i++) {
+//    	data.push([x,parseFloat(list[i])]);
+//    }
+//    console.log(list);
+    data.push([x,y]);
 }
 
 $(function () {
@@ -55,34 +80,34 @@ $(function () {
     $( "#send" ).click(function() { sendMessage(); });
 });
 
-$(document).ready(function () {
-	var data_size = 1000;
-    var data = [];
-//    var x_init = new Date();
-//    var y_init = 0;
-    data.push([new Date(), 0]);
+var buffer = [];
+var dataSize = 100;
+var samplingTimeToUpdateChart = 100; // ms
+var data = [];
 
-//    for (var i = 10; i >= 0; i--) {
-//      var x = new Date(t.getTime() - i * 1000);
-//      data.push([x, Math.random()]);
-//    }
+$(document).ready(function () {
+	
+	var t = new Date();
+    for (var i = dataSize; i > 0; i--) {
+    	var x = new Date(t.getTime() - i * 10000);
+    	data.push([x, 0.0]);
+    }
 
     var g = new Dygraph(document.getElementById("div_g"), data,
                         {
                           drawPoints: true,
                           showRoller: true,
-                          valueRange: [0.0, 1.2],
-                          labels: ['Time', 'Value']
+                          valueRange: [0.0, 12.0],
+                          labels: ['time with ms', 'Value']
                         });
     // It sucks that these things aren't objects, and we need to store state in window.
     window.intervalId = setInterval(function() {
-      var x = new Date();  // current time
-      var y = Math.random();
-      data.push([x, y]);
-      if(data.length > data_size) {
-    	  data.shift();
-      }
-      g.updateOptions( { 'file': data } );
-    }, 1000);
+    	
+    	g.updateOptions( { 'file': data } );
+		var i = 0;
+		while(data.length >= dataSize) {
+			data.shift();
+		}
+    }, samplingTimeToUpdateChart);
   }
 );
