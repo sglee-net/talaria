@@ -36,7 +36,7 @@ public class Application {
 		msgqueues.put(queueMapKey, value);
 		
 		// run spring boot
-		ApplicationContext context =SpringApplication.run(ThriftService.class,args);
+		ApplicationContext context =SpringApplication.run(Application.class,args);
 		String[] allBeanNames = context.getBeanDefinitionNames();
         for(String beanName : allBeanNames) {
             System.out.println(beanName);

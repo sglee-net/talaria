@@ -6,12 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @PropertySources({
 	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:./config/thrift.properties")
 	})
+@Component
 public class ThriftProperties {
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {

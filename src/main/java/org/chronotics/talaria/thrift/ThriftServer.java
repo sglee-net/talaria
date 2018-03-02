@@ -60,8 +60,7 @@ public class ThriftServer {
 		}
 	}
     
-	public static void server(
-			TransferService.Processor<TransferService.Iface> processor) {
+	public static void server(TransferService.Processor<TransferService.Iface> processor) {
 		try {			
 			String ip = properties.getServerIp();
 			int port = Integer.parseInt(properties.getServerPort());
