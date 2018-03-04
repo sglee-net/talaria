@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @SpringBootApplication
 public class Application {
-	private static ThriftProperties properties;
+	private static ThriftProperties thriftProperties;
 	@Autowired(required = true)
 	public void setThriftProperties(ThriftProperties _properties) {
-		properties = _properties;
+		thriftProperties = _properties;
 	}
 	
 	// Thrift Client
@@ -49,8 +49,15 @@ public class Application {
 		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
 		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
 		msgqueues.put(queueMapKey, value);
+
+		// run spring boot
+		ApplicationContext context =SpringApplication.run(ThriftService.class,args);
 		
 		// start thrift server
+		if(thriftProperties == null) {
+			System.out.println("check DI injection of properties");
+			return;
+		}
 		Handler<Map<String,Object>> handlerThriftTask = 
 				new HandlerThriftToMessageQueue();
 		
@@ -62,9 +69,7 @@ public class Application {
 		ThriftHandler thriftServiceHandler = new ThriftHandler();
 		thriftServiceHandler.setHandler(handlerThriftTask);
 
-		ThriftServer.startServer(thriftServiceHandler, properties);
+		ThriftServer.startServer(thriftServiceHandler, thriftProperties);
 		
-		// run spring boot
-		ApplicationContext context =SpringApplication.run(ThriftService.class,args);
 	}
 }

@@ -29,28 +29,35 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 		"org.chronotics.talaria.thrift"})
 //@ComponentScan(basePackageClasses = {org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates.class})
 public class Application {
-	private static ThriftProperties thriftProperties;
-	@Autowired(required = true)
-	public void setThriftProperties(ThriftProperties _properties) {
-		thriftProperties = _properties;
-	}
+//	private static ThriftProperties thriftProperties;
+//	@Autowired(required = true)
+//	public void setThriftProperties(ThriftProperties _properties) {
+//		thriftProperties = _properties;
+//	}
 
 	public static void main(String[] args) {
-		String queueMapKey = "vib";
-		// register message queue
-		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
-		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
-		msgqueues.put(queueMapKey, value);
-		
 		// run spring boot
 		ApplicationContext context =SpringApplication.run(Application.class,args);
 		String[] allBeanNames = context.getBeanDefinitionNames();
         for(String beanName : allBeanNames) {
             System.out.println(beanName);
         }
-        
+
+		Properties properties = Properties.getInstance();
+		ThriftProperties thriftProperties = properties.getThriftProperties();
+		
+		String queueMapKey = "vib";
+		// register message queue
+		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
+		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
+		msgqueues.put(queueMapKey, value);
+		       
 		// start thrift server
-		Handler<Map<String,Object>> handlerThriftTask = 
+        if(thriftProperties == null) {
+			System.out.println("check DI injection of properties");
+			return;
+		}
+        Handler<Map<String,Object>> handlerThriftTask = 
 				new HandlerThriftToMessageQueue();
 		
 		Map<String,Object> handlerAttributesThriftTask = 
@@ -62,7 +69,7 @@ public class Application {
 		thriftServiceHandler.setHandler(handlerThriftTask);
 
 		ThriftServer.startServer(thriftServiceHandler,thriftProperties);
-
+ 
 		
 //		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 //		
