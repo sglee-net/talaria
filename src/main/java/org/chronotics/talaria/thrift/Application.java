@@ -11,6 +11,7 @@ import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.taskhandler.Handler;
 import org.chronotics.talaria.taskhandler.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.gen.TransferService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @SpringBootApplication
 public class Application {
+	private static ThriftProperties properties;
+	@Autowired(required = true)
+	public void setThriftProperties(ThriftProperties _properties) {
+		properties = _properties;
+	}
+	
 	// Thrift Client
 	@RequestMapping("/")
     @ResponseBody
@@ -55,7 +62,7 @@ public class Application {
 		ThriftHandler thriftServiceHandler = new ThriftHandler();
 		thriftServiceHandler.setHandler(handlerThriftTask);
 
-		ThriftServer.startServer(thriftServiceHandler);
+		ThriftServer.startServer(thriftServiceHandler, properties);
 		
 		// run spring boot
 		ApplicationContext context =SpringApplication.run(ThriftService.class,args);

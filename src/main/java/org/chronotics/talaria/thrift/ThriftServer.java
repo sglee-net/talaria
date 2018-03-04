@@ -10,21 +10,13 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
 import org.chronotics.talaria.thrift.gen.TransferService;
-
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public class ThriftServer {	
-	@Autowired
-	private static ThriftProperties properties;
+public class ThriftServer {			
 	
-//	@PreDestroy
-//    public static void stop() {
-//		FactoryTServerTransport.getInstance().close();
-//		FactoryTTransport.getInstance().close();
-//    }
-	
-	public static void startServer(TransferService.Iface _serviceHandler) {        
+	public static void startServer(
+			TransferService.Iface _serviceHandler, 
+			ThriftProperties _properties) {        
 		try {
 //			TransferService.Iface serviceHandler = null;		
 //			if(_handler_type.equals(TransferServiceHandler.class.getName())) {
@@ -42,7 +34,7 @@ public class ThriftServer {
 			
 			Runnable server = new Runnable() {
 				public void run() {
-					server(processor);
+					server(processor, _properties);
 				}
 			};      
 			
@@ -60,10 +52,12 @@ public class ThriftServer {
 		}
 	}
     
-	public static void server(TransferService.Processor<TransferService.Iface> processor) {
+	public static void server(
+			TransferService.Processor<TransferService.Iface> processor, 
+			ThriftProperties _properties) {
 		try {			
-			String ip = properties.getServerIp();
-			int port = Integer.parseInt(properties.getServerPort());
+			String ip = _properties.getServerIp();
+			int port = Integer.parseInt(_properties.getServerPort());
     		
 			InetAddress listenAddress = InetAddress.getByName(ip);
 			TServerTransport serverTransport = new TServerSocket(
@@ -83,10 +77,11 @@ public class ThriftServer {
 	}
 	
 	public static void secure(
-			TransferService.Processor<TransferService.Iface> processor) {
-		int port = Integer.parseInt(properties.getSecurePort());
-		String keyStore = properties.getSecureKeyStore();
-		String keyPass = properties.getSecureKeyPass();
+			TransferService.Processor<TransferService.Iface> processor, 
+			ThriftProperties _properties) {
+		int port = Integer.parseInt(_properties.getSecurePort());
+		String keyStore = _properties.getSecureKeyStore();
+		String keyPass = _properties.getSecureKeyPass();
 		
 		try {
 			/*

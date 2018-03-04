@@ -14,6 +14,8 @@ import org.chronotics.talaria.taskhandler.Handler;
 import org.chronotics.talaria.taskhandler.HandlerMessageQueueToWebsocket;
 import org.chronotics.talaria.taskhandler.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.ThriftHandler;
+import org.chronotics.talaria.thrift.ThriftProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +29,11 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 		"org.chronotics.talaria.thrift"})
 //@ComponentScan(basePackageClasses = {org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates.class})
 public class Application {
+	private static ThriftProperties thriftProperties;
+	@Autowired(required = true)
+	public void setThriftProperties(ThriftProperties _properties) {
+		thriftProperties = _properties;
+	}
 
 	public static void main(String[] args) {
 		String queueMapKey = "vib";
@@ -54,7 +61,7 @@ public class Application {
 		ThriftHandler thriftServiceHandler = new ThriftHandler();
 		thriftServiceHandler.setHandler(handlerThriftTask);
 
-		ThriftServer.startServer(thriftServiceHandler);
+		ThriftServer.startServer(thriftServiceHandler,thriftProperties);
 
 		
 //		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);

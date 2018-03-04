@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 	})
 @Component
 public class ThriftProperties {
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
+//	@Bean
+//	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+//		return new PropertySourcesPlaceholderConfigurer();
+//	}
 	
 	@Value("${server.ip}")
 	private String serverIp;
