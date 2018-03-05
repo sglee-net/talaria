@@ -16,24 +16,33 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 public class Application {
 
 	public static void main(String[] args) {
-		String queueMapKey = "vib";
+		ApplicationContext context = SpringApplication.run(Application.class, args);
+		SpringStompServerProperties properties = 
+				(SpringStompServerProperties)context.getBean("springStompServerProperties");
+//		String[] allBeanNames = context.getBeanDefinitionNames();
+//		for(String beanName : allBeanNames) {
+//			System.out.println(beanName);
+//		}
+	    
+		// properties
+		String queueMapKey = properties.getQueueMapKey();//"vib";
+		String targetDestination = properties.getTargetDestination(); // "/topic/vib";
+		
 		// register message queue
 		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
 		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
 		msgqueues.put(queueMapKey, value);
-		
-		ApplicationContext context = SpringApplication.run(Application.class, args);
 		
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
 		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
 				new HandlerMessageQueueToWebsocket();
 		
-		Map<String,Object> handlerAttributesWebsocketTask = 
+		Map<String,Object> handlerAttributes = 
 				new HashMap<String,Object>();
-		handlerAttributesWebsocketTask.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
-		handlerAttributesWebsocketTask.put(HandlerMessageQueueToWebsocket.targetTopic, "/topic/vib");
-		handlerWebsocketTask.setAttributes(handlerAttributesWebsocketTask);
+		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
+		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
+		handlerWebsocketTask.setAttributes(handlerAttributes);
 		
 		scheduledUpdates.setHandler(handlerWebsocketTask);
 		

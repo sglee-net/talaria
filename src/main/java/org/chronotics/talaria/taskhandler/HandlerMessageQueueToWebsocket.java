@@ -7,12 +7,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 public class HandlerMessageQueueToWebsocket extends Handler<SimpMessagingTemplate>{
 	public static String queueMapKey = "queueMapKey";
-	public static String targetTopic = "targetTopic";
+	public static String targetDestination = "targetDestination";
 
 	@Override
 	public Object execute(SimpMessagingTemplate _template) throws Exception {
 		String queueMapKey = (String)super.attributes.get(HandlerMessageQueueToWebsocket.queueMapKey);
-		String targetTopic = (String)super.attributes.get(HandlerMessageQueueToWebsocket.targetTopic);
+		String targetDestination = (String)super.attributes.get(HandlerMessageQueueToWebsocket.targetDestination);
 		
     	MessageQueueMap pool = MessageQueueMap.getInstance();
 		ConcurrentLinkedQueue<String> msgqueue = 
@@ -20,7 +20,7 @@ public class HandlerMessageQueueToWebsocket extends Handler<SimpMessagingTemplat
 		if(msgqueue!=null && !msgqueue.isEmpty()) {
 			while(!msgqueue.isEmpty()) {
 				String msg = msgqueue.poll();
-				_template.convertAndSend(targetTopic,msg);//"/topic/reply",msg);
+				_template.convertAndSend(targetDestination,msg);//"/topic/reply",msg);
 			}
 		}
 		return null;

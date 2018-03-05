@@ -1,4 +1,4 @@
-package org.chronotics.talaria.thrift;
+package temp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +27,13 @@ public class ThriftService {
 	@RequestMapping("/")
     @ResponseBody
     String home() {
-		TTransport transport=FactoryTTransport.getInstance().get("192.168.1.187");
-		TProtocol protocol = new  TBinaryProtocol(transport);
-		TransferService.Client client = new TransferService.Client(protocol);
-        System.out.println("Thrift Client requested");
-//        	Message msg = client.getMsg();
-		System.out.println("client.getMsg() ends");   
-        //transport.close();
+//		TTransport transport=FactoryTTransport.getInstance().get("192.168.1.187");
+//		TProtocol protocol = new  TBinaryProtocol(transport);
+//		TransferService.Client client = new TransferService.Client(protocol);
+//        System.out.println("Thrift Client requested");
+////        	Message msg = client.getMsg();
+//		System.out.println("client.getMsg() ends");   
+//        //transport.close();
         return "Hello World!";
     }
 

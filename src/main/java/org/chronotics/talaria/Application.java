@@ -1,9 +1,9 @@
 package org.chronotics.talaria;
 
 import org.chronotics.talaria.thrift.ThriftServer;
-import org.chronotics.talaria.thrift.ThriftService;
 import org.chronotics.talaria.websocket.springstompserver.DummyMessageGenerator;
 import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
+import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,48 +15,57 @@ import org.chronotics.talaria.taskhandler.HandlerMessageQueueToWebsocket;
 import org.chronotics.talaria.taskhandler.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.ThriftHandler;
 import org.chronotics.talaria.thrift.ThriftProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
+		"org.chronotics.talaria",
 		"org.chronotics.talaria.websocket.springstompserver", 
 		"org.chronotics.talaria.thrift"})
 //@ComponentScan(basePackageClasses = {org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates.class})
 public class Application {
-//	private static ThriftProperties thriftProperties;
-//	@Autowired(required = true)
-//	public void setThriftProperties(ThriftProperties _properties) {
-//		thriftProperties = _properties;
-//	}
 
 	public static void main(String[] args) {
 		// run spring boot
-		ApplicationContext context =SpringApplication.run(Application.class,args);
+		ApplicationContext context = SpringApplication.run(Application.class,args);
 		String[] allBeanNames = context.getBeanDefinitionNames();
-        for(String beanName : allBeanNames) {
-            System.out.println(beanName);
-        }
-
-		Properties properties = Properties.getInstance();
-		ThriftProperties thriftProperties = properties.getThriftProperties();
+//		for(String beanName : allBeanNames) {
+//			System.out.println(beanName);
+//		}
 		
-		String queueMapKey = "vib";
+		// getProperties
+		Properties properties = 
+				(Properties)context.getBean("properties");
+		assert(properties != null);
+		if(properties == null) {
+			return;
+		}
+		ThriftProperties thriftProperties = 
+				properties.getThriftProperties();
+		assert(thriftProperties != null);
+		if(thriftProperties == null) {
+			return;
+		}
+		SpringStompServerProperties stompProperties = 
+				properties.getSpringStompServerProperties();
+		assert(stompProperties != null);
+		if(stompProperties == null) {
+			return;
+		}
+		
+		String targetDestination = stompProperties.getTargetDestination();
+		String queueMapKey = properties.getQueueMapKey(); //"vib";
+		
 		// register message queue
 		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
 		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
 		msgqueues.put(queueMapKey, value);
-		       
+
 		// start thrift server
-        if(thriftProperties == null) {
-			System.out.println("check DI injection of properties");
-			return;
-		}
         Handler<Map<String,Object>> handlerThriftTask = 
 				new HandlerThriftToMessageQueue();
 		
@@ -70,22 +79,21 @@ public class Application {
 
 		ThriftServer.startServer(thriftServiceHandler,thriftProperties);
  
+		// start websocket server
+		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
-//		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
-//		
-//		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-//				new HandlerMessageQueueToWebsocket();
-//		
-//		Map<String,Object> handlerAttributesWebsocketTask = 
-//				new HashMap<String,Object>();
-//		handlerAttributesWebsocketTask.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
-//		handlerAttributesWebsocketTask.put(HandlerMessageQueueToWebsocket.targetTopic, "/topic/vib");
-//		handlerWebsocketTask.setAttributes(handlerAttributesWebsocketTask);
-//		
-//		scheduledUpdates.setHandler(handlerWebsocketTask);
-//		
-//		Thread thread = new Thread(new DummyMessageGenerator());
-//		thread.start();
+		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
+				new HandlerMessageQueueToWebsocket();
+		
+		Map<String,Object> handlerAttributes = 
+				new HashMap<String,Object>();
+		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
+		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
+		handlerWebsocketTask.setAttributes(handlerAttributes);
+		
+		scheduledUpdates.setHandler(handlerWebsocketTask);
+		
+		Thread thread = new Thread(new DummyMessageGenerator());
+		thread.start();
 	}
-
 }

@@ -1,29 +1,47 @@
 package org.chronotics.talaria;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.chronotics.talaria.thrift.ThriftProperties;
+import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
-
-import net.sglee.talaria.websocket.common.WebsocketProperties;
-
+import org.springframework.validation.annotation.Validated;
+@Validated
+@PropertySources({
+	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+	@PropertySource("classpath:./config/talaria.properties")
+	})
+@ComponentScan(basePackages = {
+		"org.chronotics.talaria.websocket.springstompserver", 
+		"org.chronotics.talaria.thrift"})
 @Component
 public class Properties {
-	private static class Holder {
-		private static final Properties theInstance=new Properties();
-	}
-	
-	public static Properties getInstance() {
-		return Holder.theInstance;
-	}
-	
 	@Autowired
 	private ThriftProperties thriftProperties;
-	@Autowired
-	private WebsocketProperties websocketProperties;
 	public ThriftProperties getThriftProperties() {
 		return thriftProperties;
 	}
-	public WebsocketProperties getWebsocketProperties() {
-		return websocketProperties;
+	
+	@Autowired
+	private SpringStompServerProperties springStompServerProperties;
+	public SpringStompServerProperties getSpringStompServerProperties() {
+		return springStompServerProperties;
+	}
+	
+	@Valid
+	@NotNull
+	@Value("${queueMapKey}")
+	private String queueMapKey;
+	public String getQueueMapKey() {
+		return queueMapKey;
+	}
+	public void setQueueMapKey(String _queueMapKey) {
+		queueMapKey = _queueMapKey;
 	}
 }

@@ -56,8 +56,8 @@ public class ThriftServer {
 			TransferService.Processor<TransferService.Iface> processor, 
 			ThriftProperties _properties) {
 		try {			
-			String ip = _properties.getServerIp();
-			int port = Integer.parseInt(_properties.getServerPort());
+			String ip = "192.168.0.41";//_properties.getServerIp();
+			int port = 9091;//Integer.parseInt(_properties.getServerPort());
     		
 			InetAddress listenAddress = InetAddress.getByName(ip);
 			TServerTransport serverTransport = new TServerSocket(

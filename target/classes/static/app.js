@@ -23,7 +23,7 @@ function connect(event) {
 
 function onConnected() {
 	setConnected(true);
-	stompClient.subscribe('/topic/vib', onMessageReceived);
+	stompClient.subscribe('/topic/vibration', onMessageReceived);
 }
 
 function onError(error) {

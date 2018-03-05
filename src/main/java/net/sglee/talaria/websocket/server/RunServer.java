@@ -17,8 +17,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.test.context.ContextConfiguration;
 
-import net.sglee.talaria.websocket.common.WebsocketProperties;
-
 //@EnableAutoConfiguration
 //@Configuration tags the class as a source of bean definitions for the application context.
 //@EnableAutoConfiguration tells Spring Boot to start adding beans based on classpath settings, other beans, and various property settings.
@@ -33,22 +31,22 @@ public class RunServer {
 	private static final Logger logger = LoggerFactory.getLogger(RunServer.class);
 
 	// the method for the injection of a global variable
-	static private WebsocketProperties properties;
+	static private WebsocketServerProperties properties;
 	@Autowired(required = true)
-	void setProperties(WebsocketProperties _prop) {
+	void setProperties(WebsocketServerProperties _prop) {
 		properties = _prop;
 	}
 	
 	public static void start(String args[]) {
 		ApplicationContext context = SpringApplication.run(RunServer.class,args);
-		System.out.println(properties.getServerPort());
+		System.out.println(properties.getPort());
 	}
 	
 	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
 	    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
 	    factory.setPort(
-	    		Integer.parseInt(properties.getServerPort()) // 8080
+	    		Integer.parseInt(properties.getPort()) // 8080
 	    		);
 	    factory.setSessionTimeout(
 	    		Integer.parseInt(properties.getSessionTimeout()), // 10

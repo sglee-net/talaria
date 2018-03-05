@@ -9,15 +9,13 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 
-import net.sglee.talaria.websocket.common.WebsocketProperties;
-
 @ComponentScan("net.sglee.talaria.websocket.common")
 @ComponentScan
 public class RunClient {
 	// the method for the injection of a global variable
-	static private WebsocketProperties properties;
+	static private WebsocketClientProperties properties;
 	@Autowired(required = true)
-	void setProperties(WebsocketProperties _prop) {
+	void setProperties(WebsocketClientProperties _prop) {
 		properties = _prop;
 	}
 	

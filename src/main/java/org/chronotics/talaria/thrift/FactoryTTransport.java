@@ -8,7 +8,7 @@ import javax.annotation.PreDestroy;
 import org.apache.thrift.transport.TTransport;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class FactoryTTransport {
 	private static class Holder {
 		private static final FactoryTTransport theInstance=new FactoryTTransport();
