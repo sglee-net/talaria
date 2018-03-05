@@ -1,6 +1,6 @@
 package org.chronotics.talaria.websocket.springstompserver;
 
-import org.chronotics.talaria.taskhandler.Handler;
+import org.chronotics.talaria.common.Handler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;

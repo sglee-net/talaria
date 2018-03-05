@@ -13,8 +13,8 @@ import org.springframework.boot.autoconfigure.*;
 import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.taskhandler.Handler;
-import org.chronotics.talaria.taskhandler.HandlerThriftToMessageQueue;
+import org.chronotics.talaria.common.Handler;
+import org.chronotics.talaria.common.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.gen.TransferService;
 
 @Controller

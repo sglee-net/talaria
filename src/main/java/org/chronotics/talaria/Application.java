@@ -1,7 +1,7 @@
 package org.chronotics.talaria;
 
 import org.chronotics.talaria.thrift.ThriftServer;
-import org.chronotics.talaria.websocket.springstompserver.DummyMessageGenerator;
+import org.chronotics.talaria.common.DummyMessageGenerator;
 import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 
@@ -10,9 +10,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.taskhandler.Handler;
-import org.chronotics.talaria.taskhandler.HandlerMessageQueueToWebsocket;
-import org.chronotics.talaria.taskhandler.HandlerThriftToMessageQueue;
+import org.chronotics.talaria.common.TalariaProperties;
+import org.chronotics.talaria.common.Handler;
+import org.chronotics.talaria.common.HandlerMessageQueueToWebsocket;
+import org.chronotics.talaria.common.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.ThriftHandler;
 import org.chronotics.talaria.thrift.ThriftProperties;
 import org.springframework.boot.SpringApplication;
@@ -24,6 +25,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @SpringBootApplication
 @ComponentScan(basePackages = {
 		"org.chronotics.talaria",
+		"org.chronotics.talaria.common",
 		"org.chronotics.talaria.websocket.springstompserver", 
 		"org.chronotics.talaria.thrift"})
 //@ComponentScan(basePackageClasses = {org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates.class})
@@ -38,8 +40,8 @@ public class Application {
 //		}
 		
 		// getProperties
-		Properties properties = 
-				(Properties)context.getBean("properties");
+		TalariaProperties properties = 
+				(TalariaProperties)context.getBean("talariaProperties");
 		assert(properties != null);
 		if(properties == null) {
 			return;

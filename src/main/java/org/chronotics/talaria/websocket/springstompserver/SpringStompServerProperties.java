@@ -73,17 +73,6 @@ public class SpringStompServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${queueMapKey}")
-	private String queueMapKey;
-	public String getQueueMapKey() {
-		return queueMapKey;
-	}
-	public void setQueueMapKey(String _queueMapKey) {
-		queueMapKey = _queueMapKey;
-	}
-	
-	@Valid
-	@NotNull
 	@Value("${targetDestination}")
 	private String targetDestination;
 	public String getTargetDestination() {
@@ -91,16 +80,5 @@ public class SpringStompServerProperties {
 	}
 	public void setTargetDestination(String _targetDestination) {
 		targetDestination = _targetDestination;
-	}
-	
-	@Valid
-	@NotNull
-	@Value("${dateFormat}")
-	private String dateFormat;
-	public String getDateFormat() {
-		return dateFormat;
-	}
-	public void setDateFormat(String _dateFormat) {
-		dateFormat = _dateFormat;
 	}
 }

@@ -1,4 +1,4 @@
-package org.chronotics.talaria.taskhandler;
+package org.chronotics.talaria.common;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;

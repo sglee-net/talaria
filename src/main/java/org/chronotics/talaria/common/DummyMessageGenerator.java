@@ -1,4 +1,4 @@
-package org.chronotics.talaria.websocket.springstompserver;
+package org.chronotics.talaria.common;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

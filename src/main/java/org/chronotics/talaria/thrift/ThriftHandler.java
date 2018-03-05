@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.thrift.TException;
-import org.chronotics.talaria.taskhandler.Handler;
+import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.thrift.gen.Message;
 import org.chronotics.talaria.thrift.gen.TransferService;
 

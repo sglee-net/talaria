@@ -1,4 +1,4 @@
-package org.chronotics.talaria;
+package org.chronotics.talaria.common;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -21,7 +21,7 @@ import org.springframework.validation.annotation.Validated;
 		"org.chronotics.talaria.websocket.springstompserver", 
 		"org.chronotics.talaria.thrift"})
 @Component
-public class Properties {
+public class TalariaProperties {
 	@Autowired
 	private ThriftProperties thriftProperties;
 	public ThriftProperties getThriftProperties() {
