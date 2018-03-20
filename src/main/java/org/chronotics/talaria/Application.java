@@ -1,6 +1,7 @@
 package org.chronotics.talaria;
 
 import org.chronotics.talaria.thrift.ThriftServer;
+import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.common.DummyMessageGenerator;
 import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
@@ -15,7 +16,6 @@ import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.common.HandlerMessageQueueToWebsocket;
 import org.chronotics.talaria.common.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.ThriftHandler;
-import org.chronotics.talaria.thrift.ThriftProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -46,10 +46,10 @@ public class Application {
 		if(properties == null) {
 			return;
 		}
-		ThriftProperties thriftProperties = 
-				properties.getThriftProperties();
-		assert(thriftProperties != null);
-		if(thriftProperties == null) {
+		ThriftServerProperties thriftServerProperties = 
+				properties.getThriftServerProperties();
+		assert(thriftServerProperties != null);
+		if(thriftServerProperties == null) {
 			return;
 		}
 		SpringStompServerProperties stompProperties = 
@@ -79,23 +79,23 @@ public class Application {
 		ThriftHandler thriftServiceHandler = new ThriftHandler();
 		thriftServiceHandler.setHandler(handlerThriftTask);
 
-		ThriftServer.startServer(thriftServiceHandler,thriftProperties);
+		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
  
-		// start websocket server
-		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
-		
-		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket();
-		
-		Map<String,Object> handlerAttributes = 
-				new HashMap<String,Object>();
-		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
-		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
-		handlerWebsocketTask.setAttributes(handlerAttributes);
-		
-		scheduledUpdates.setHandler(handlerWebsocketTask);
-		
-		Thread thread = new Thread(new DummyMessageGenerator());
-		thread.start();
+//		// start websocket server
+//		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
+//		
+//		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
+//				new HandlerMessageQueueToWebsocket();
+//		
+//		Map<String,Object> handlerAttributes = 
+//				new HashMap<String,Object>();
+//		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
+//		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
+//		handlerWebsocketTask.setAttributes(handlerAttributes);
+//		
+//		scheduledUpdates.setHandler(handlerWebsocketTask);
+//		
+//		Thread thread = new Thread(new DummyMessageGenerator());
+//		thread.start();
 	}
 }

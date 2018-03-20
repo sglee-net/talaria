@@ -3,7 +3,7 @@ package org.chronotics.talaria.common;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.chronotics.talaria.thrift.ThriftProperties;
+import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +23,9 @@ import org.springframework.validation.annotation.Validated;
 @Component
 public class TalariaProperties {
 	@Autowired
-	private ThriftProperties thriftProperties;
-	public ThriftProperties getThriftProperties() {
-		return thriftProperties;
+	private ThriftServerProperties thriftServerProperties;
+	public ThriftServerProperties getThriftServerProperties() {
+		return thriftServerProperties;
 	}
 	
 	@Autowired

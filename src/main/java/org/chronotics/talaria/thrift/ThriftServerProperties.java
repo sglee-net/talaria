@@ -4,46 +4,43 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
 	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:./config/thrift.properties")
+	@PropertySource("classpath:./config/thriftserver.properties")
 	})
 @Component
-public class ThriftProperties {
+public class ThriftServerProperties {
 	@Valid
 	@NotNull	
-	@Value("${server.ip}")
-	private String serverIp;
-	String getServerIp() {
-		return serverIp;
+	@Value("${ip}")
+	private String ip;
+	String getIp() {
+		return ip;
 	}
-	public void setServerIp(String _ip) {
-		serverIp = _ip;
+	public void setIp(String _ip) {
+		ip = _ip;
 	}
 	
 	@Valid
 	@NotNull	
-	@Value("${server.port}")
-	private String serverPort;
-	String getServerPort() {
-		return serverPort;
+	@Value("${port}")
+	private String port;
+	String getPort() {
+		return port;
 	}
-	public void setServerPort(String _port) {
-		serverPort = _port;
+	public void setPort(String _port) {
+		port = _port;
 	}
 	
 	@Valid
 	@NotNull	
-	@Value("${secure.port}")
+	@Value("${securePort}")
 	private String securePort;
 	String getSecurePort() {
 		return securePort;
@@ -54,7 +51,7 @@ public class ThriftProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${secure.keyStore}")
+	@Value("${secureKeyStore}")
 	private String secureKeyStore;
 	String getSecureKeyStore() {
 		return secureKeyStore;
@@ -65,7 +62,7 @@ public class ThriftProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${secure.keyPass}")
+	@Value("${secureKeyPass}")
 	private String secureKeyPass;
 	String getSecureKeyPass() {
 		return secureKeyPass;

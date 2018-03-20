@@ -16,7 +16,7 @@ public class ThriftServer {
 	
 	public static void startServer(
 			TransferService.Iface _serviceHandler, 
-			ThriftProperties _properties) {        
+			ThriftServerProperties _properties) {        
 		try {
 //			TransferService.Iface serviceHandler = null;		
 //			if(_handler_type.equals(TransferServiceHandler.class.getName())) {
@@ -54,7 +54,7 @@ public class ThriftServer {
     
 	public static void server(
 			TransferService.Processor<TransferService.Iface> processor, 
-			ThriftProperties _properties) {
+			ThriftServerProperties _properties) {
 		try {			
 			String ip = "192.168.0.41";//_properties.getServerIp();
 			int port = 9091;//Integer.parseInt(_properties.getServerPort());
@@ -78,7 +78,7 @@ public class ThriftServer {
 	
 	public static void secure(
 			TransferService.Processor<TransferService.Iface> processor, 
-			ThriftProperties _properties) {
+			ThriftServerProperties _properties) {
 		int port = Integer.parseInt(_properties.getSecurePort());
 		String keyStore = _properties.getSecureKeyStore();
 		String keyPass = _properties.getSecureKeyPass();
