@@ -3,18 +3,19 @@ namespace java thrift_gen_messenger
 namespace php thrift_gen_messenger
 
 struct Message {
-	1: required string _sender_id;
-	2: required string _receiver_id;
-	3: required string _subject;
-	4: required string _sequence_no;
-	5: required bool _bool;
-	6: required i16 _i16;
-	7: required i32 _i32;
-	8: required i64 _i64;
-	9: required double _double;
-	10: required string _string;
-	11: required string _payload_string;
-	12: optional string _payload_binary;
+	1:  required string 		_sender_id;
+	2:  required string 		_receiver_id;
+	3:  required string 		_subject;
+	4:  required string 		_sequence_no;
+	5:  required string 		_timestamp;
+	6:  required list<bool> 	_list_bool;
+	7:  required list<i16> 		_list_i16;
+	8:  required list<i32> 		_list_i32;
+	9:  required list<i64> 		_list_i64;
+	10: required list<double> 	_list_double;
+	11: required list<string>	_list_string;
+	12: required binary 		_binary;
+	13: optional string 		_payload;
 }
 
 service TransferService {
