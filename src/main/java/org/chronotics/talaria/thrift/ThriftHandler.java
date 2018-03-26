@@ -60,6 +60,7 @@ public class ThriftHandler implements TransferService.Iface {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put(ThriftHandler.function, ThriftHandler.writeMessage);
 			map.put(ThriftHandler.arg1,(Object)_v);
+			System.out.println(_v);
 			executeHandler(map);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -151,6 +152,7 @@ public class ThriftHandler implements TransferService.Iface {
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put(ThriftHandler.function, ThriftHandler.writeString);
 			map.put(ThriftHandler.arg1,(Object)_v);
+			System.out.println(_v);
 			executeHandler(map);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
