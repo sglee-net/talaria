@@ -1,8 +1,5 @@
 package org.chronotics.talaria.websocket.springstompserver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
@@ -13,6 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+/**
+ * @author SG Lee
+ * @since 3/20/2015
+ * @description
+ * The registered handler will be called every fixedDelay.
+ * This class is to handle Messagequeue that contains messages that 
+ * might be sent by another Class.
+ */
 
 @Component
 public class ScheduledUpdates<T> {

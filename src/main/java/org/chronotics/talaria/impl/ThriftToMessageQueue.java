@@ -9,6 +9,14 @@ import org.chronotics.talaria.thrift.gen.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author SG Lee
+ * @since 3/20/2015
+ * @description
+ * This Class is to transfer thrift data to MessageQueue that is defined in 
+ * .common package 
+ */
+
 public class ThriftToMessageQueue implements ThriftService {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);

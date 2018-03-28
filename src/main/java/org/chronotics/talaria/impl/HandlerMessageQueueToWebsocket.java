@@ -3,6 +3,13 @@ package org.chronotics.talaria.impl;
 import org.chronotics.talaria.common.Handler;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+/**
+ * @author SG Lee
+ * @since 3/20/2015
+ * @description
+ * This Class is to transfer data to Websocket 
+ */
+
 public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
 	public HandlerMessageQueueToWebsocket(Handler<T> _nextHandler) {
 		super(_nextHandler);

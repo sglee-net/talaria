@@ -7,10 +7,18 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author SG Lee
+ * @since 3/20/2015
+ * @description
+ * This Class is wrapper class of ConcurrentLinkedQueue
+ * You can manage the size of queue and the action when the queue is overflowed
+ */
+
 public class MessageQueue<E> implements Iterable<E> {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
-	public static int default_maxQueueSize = 20;
+	public static int default_maxQueueSize = 1000;
 	public enum OVERFLOW_STRATEGY {
 		NO_INSERTION,
 		DELETE_FIRST;

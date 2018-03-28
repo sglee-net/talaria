@@ -12,6 +12,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+
+/**
+ * @author SG Lee
+ * @since 3/20/2015
+ * @description
+ * General properties
+ */
+
 @Validated
 @PropertySources({
 	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
