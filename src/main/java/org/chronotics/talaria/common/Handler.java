@@ -37,8 +37,7 @@ public abstract class Handler<T> {
 		return attributes.get(_key);
 	}
 	
-//	abstract public void setAttribute(Object _obj) throws Exception;
-	public void put(T _obj) throws Exception {
-	}
+	//public void put(T _obj) throws Exception { }
+	
 	abstract public Object execute(T _obj) throws Exception;
 }

@@ -55,20 +55,23 @@ function onMessageReceived(payload) {
 //    var x = new Date();  // current time
 //    var y = parseFloat(payload.body);
     var jsonObject = JSON.parse(payload.body);
-    var x = new Date(jsonObject.time);
-    var y = parseFloat(jsonObject.value);
-    if(x=="" || y=="") {
-    	return;
+    var senderId = jsonObject.senderId;
+    var listDouble = jsonObject.listDouble;
+    var timestamp = parseInt(jsonObject.timestamp);
+    if(senderId === "d0") {
+	    var count = 0;
+	    for(var i = 0; i < listDouble.length; i++) {
+	    	if(i % 1000 == 0) {
+		    	var x = new Date((timestamp + count*100));
+		    	var y = parseFloat(listDouble[i]);
+				if(x=="" || y=="") {
+					return;
+				}
+	    		data.push([x,y]);//y[0]]);
+	    		count++;
+	    	}
+	    }
     }
-//    var list = JSON.parse(payload.body).list;
-//    if(list == null || list=="") {
-//    	return;
-//    }
-//    for(var i=0; i<list.length; i++) {
-//    	data.push([x,parseFloat(list[i])]);
-//    }
-//    console.log(list);
-    data.push([x,y]);
 }
 
 $(function () {
@@ -97,7 +100,7 @@ $(document).ready(function () {
                         {
                           drawPoints: true,
                           showRoller: true,
-                          valueRange: [0.0, 12.0],
+                          valueRange: [0.0, 0.2],
                           labels: ['time with ms', 'Value']
                         });
     // It sucks that these things aren't objects, and we need to store state in window.

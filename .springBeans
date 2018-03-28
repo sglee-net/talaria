@@ -9,7 +9,7 @@
 	<configs>
 	</configs>
 	<autoconfigs>
-		<config>java:org.chronotics.talaria.thrift.FactoryTTransport</config>
+		<config>java:org.chronotics.talaria.Application</config>
 		<config>java:org.chronotics.talaria.websocket.springstompserver.Application</config>
 	</autoconfigs>
 	<configSets>

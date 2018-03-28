@@ -6,9 +6,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.common.DummyMessageGenerator;
+import org.chronotics.talaria.impl.DummyMessageGenerator;
 import org.chronotics.talaria.common.Handler;
-import org.chronotics.talaria.common.HandlerMessageQueueToWebsocket;
+import org.chronotics.talaria.common.MessageQueue;
+import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -36,9 +37,12 @@ public class Application {
 		String targetDestination = stompProperties.getTargetDestination(); // "/topic/vib";
 		
 		// register message queue
-		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
-		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
-		msgqueues.put(queueMapKey, value);
+		MessageQueue<String> msgqueue = 
+				new MessageQueue<String>(
+						String.class,
+						MessageQueue.default_maxQueueSize,
+						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+		MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
 		
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		

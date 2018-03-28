@@ -2,19 +2,19 @@ package org.chronotics.talaria;
 
 import org.chronotics.talaria.thrift.ThriftServer;
 import org.chronotics.talaria.thrift.ThriftServerProperties;
-import org.chronotics.talaria.common.DummyMessageGenerator;
+import org.chronotics.talaria.impl.DummyMessageGenerator;
 import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
 import org.chronotics.talaria.common.Handler;
-import org.chronotics.talaria.common.HandlerMessageQueueToWebsocket;
-import org.chronotics.talaria.common.HandlerThriftToMessageQueue;
+import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
+import org.chronotics.talaria.impl.HandlerThriftToMessageQueue;
+import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.thrift.ThriftHandler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -63,38 +63,31 @@ public class Application {
 		String queueMapKey = properties.getQueueMapKey(); //"vib";
 		
 		// register message queue
-		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
-		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
-		msgqueues.put(queueMapKey, value);
+		MessageQueue<String> msgqueue = 
+				new MessageQueue<String>(
+						String.class,
+						MessageQueue.default_maxQueueSize,
+						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+		MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
 
 		// start thrift server
-        Handler<Map<String,Object>> handlerThriftTask = 
-				new HandlerThriftToMessageQueue();
-		
-		Map<String,Object> handlerAttributesThriftTask = 
-				new HashMap<String,Object>();
-		handlerAttributesThriftTask.put(HandlerThriftToMessageQueue.queueMapKey, queueMapKey);
-		handlerThriftTask.setAttributes(handlerAttributesThriftTask);
-		
-		ThriftHandler thriftServiceHandler = new ThriftHandler();
-		thriftServiceHandler.setHandler(handlerThriftTask);
-
+		ThriftHandler thriftServiceHandler = new HandlerThriftToMessageQueue(queueMapKey);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
  
-//		// start websocket server
-//		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
-//		
-//		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-//				new HandlerMessageQueueToWebsocket();
-//		
-//		Map<String,Object> handlerAttributes = 
-//				new HashMap<String,Object>();
-//		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
-//		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
-//		handlerWebsocketTask.setAttributes(handlerAttributes);
-//		
-//		scheduledUpdates.setHandler(handlerWebsocketTask);
-//		
+		// start websocket server
+		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
+		
+		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
+				new HandlerMessageQueueToWebsocket();
+		
+		Map<String,Object> handlerAttributes = 
+				new HashMap<String,Object>();
+		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
+		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
+		handlerWebsocketTask.setAttributes(handlerAttributes);
+		
+		scheduledUpdates.setHandler(handlerWebsocketTask);
+		
 //		Thread thread = new Thread(new DummyMessageGenerator());
 //		thread.start();
 	}

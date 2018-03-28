@@ -2,7 +2,6 @@ package org.chronotics.talaria.common;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MessageQueueMap {
 	private static class Holder {
@@ -16,14 +15,14 @@ public class MessageQueueMap {
 	private MessageQueueMap() {
 	}
 	
-	private Map<String,ConcurrentLinkedQueue<?>> map = 
-			new ConcurrentHashMap<String,ConcurrentLinkedQueue<?>>();
+	private Map<String,MessageQueue<?>> map = 
+			new ConcurrentHashMap<String,MessageQueue<?>>();
 	
-	public ConcurrentLinkedQueue<?> getMessageQueue(String _key) {
+	public MessageQueue<?> getMessageQueue(String _key) {
 		return map.get(_key);
 	}
 	
-	public void put(String _key,ConcurrentLinkedQueue<?> _value) {
+	public void put(String _key,MessageQueue<?> _value) {
 		map.put(_key, _value);
 	}
 }

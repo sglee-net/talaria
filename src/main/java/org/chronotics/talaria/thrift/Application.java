@@ -12,7 +12,8 @@ import org.apache.thrift.transport.TTransport;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
 import org.chronotics.talaria.common.Handler;
-import org.chronotics.talaria.common.HandlerThriftToMessageQueue;
+import org.chronotics.talaria.common.MessageQueue;
+import org.chronotics.talaria.impl.HandlerThriftToMessageQueue;
 import org.chronotics.talaria.thrift.gen.TransferService;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,24 +74,16 @@ public class Application {
 			System.out.println("check DI injection of ThriftServerProperties");
 			return;
 		}
-		
 		// register message queue
-		ConcurrentLinkedQueue<String> value = new ConcurrentLinkedQueue<String>();
-		MessageQueueMap msgqueues = MessageQueueMap.getInstance();
-		msgqueues.put(queueMapKey, value);
+		MessageQueue<String> msgqueue = 
+				new MessageQueue<String>(
+						String.class,
+						MessageQueue.default_maxQueueSize,
+						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+		MessageQueueMap.getInstance().put(queueMapKey, msgqueue);	
 
 		// start thrift server
-        Handler<Map<String,Object>> handlerThriftTask = 
-				new HandlerThriftToMessageQueue();
-		
-		Map<String,Object> handlerAttributesThriftTask = 
-				new HashMap<String,Object>();
-		handlerAttributesThriftTask.put(HandlerThriftToMessageQueue.queueMapKey, queueMapKey);
-		handlerThriftTask.setAttributes(handlerAttributesThriftTask);
-		
-		ThriftHandler thriftServiceHandler = new ThriftHandler();
-		thriftServiceHandler.setHandler(handlerThriftTask);
-
+		ThriftHandler thriftServiceHandler = new HandlerThriftToMessageQueue(queueMapKey);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
 	}
 }
