@@ -2,7 +2,6 @@ package org.chronotics.talaria.websocket.springstompserver;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
@@ -22,6 +21,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 		"org.chronotics.talaria.websocket.springstompserver"})
 public class Application {
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(Application.class, args);
 //		String[] allBeanNames = context.getBeanDefinitionNames();
@@ -47,15 +47,13 @@ public class Application {
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
 		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket();
+				new HandlerMessageQueueToWebsocket(null);
 		
-		Map<String,Object> handlerAttributes = 
-				new HashMap<String,Object>();
-		handlerAttributes.put(HandlerMessageQueueToWebsocket.queueMapKey, queueMapKey);
-		handlerAttributes.put(HandlerMessageQueueToWebsocket.targetDestination, targetDestination);//"/topic/vib");
-		handlerWebsocketTask.setAttributes(handlerAttributes);
+		handlerWebsocketTask.putAttribute(
+				HandlerMessageQueueToWebsocket.targetDestination,
+				targetDestination);
 		
-		scheduledUpdates.setHandler(handlerWebsocketTask);
+		scheduledUpdates.setAttribute(queueMapKey, handlerWebsocketTask);
 		
 		Thread thread = new Thread(new DummyMessageGenerator());
 		thread.start();

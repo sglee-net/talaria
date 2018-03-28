@@ -1,18 +1,19 @@
 package org.chronotics.talaria.impl;
+
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.thrift.MessageToJson;
-import org.chronotics.talaria.thrift.ThriftHandler;
+import org.chronotics.talaria.thrift.ThriftService;
 import org.chronotics.talaria.thrift.gen.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HandlerThriftToMessageQueue implements ThriftHandler {
+public class ThriftToMessageQueue implements ThriftService {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
 
-	public HandlerThriftToMessageQueue(String _queueMapKey) {
+	public ThriftToMessageQueue(String _queueMapKey) {
 		setQueueMapKey(_queueMapKey);
 	}
 	
@@ -177,5 +178,5 @@ public class HandlerThriftToMessageQueue implements ThriftHandler {
 	public String readString() throws TException {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}	
 }

@@ -1,43 +1,56 @@
 package org.chronotics.talaria.common;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Handler<T> {
-	protected List<Handler<?>> postHandler = new ArrayList<Handler<?>>();
-	protected Map<String,Object> attributes = null;
+
+	@SuppressWarnings("unused")
+	private Handler() {}
 	
-	public void addPostHandler(Handler<?> _handler) {
-		postHandler.add(_handler);
+	protected Handler(Handler <T> _nextHandler) {
+		nextHandler = _nextHandler;
 	}
 	
-	public int sizePostHandler() {
-		return postHandler.size();
+	protected Handler<T> nextHandler = null; 
+
+	public void addNextHandler(Handler<T> _nextHandler) {
+		nextHandler = _nextHandler;
 	}
 	
-	public Iterator<Handler<?>> getPostHandlerIterator() {
-		return postHandler.iterator();
+	// argument
+	// _arg : might be the value to execute Object of attributes.
+	protected abstract void executeImp(T _arg) throws Exception;
+	
+	public final void execute(T _arg) throws Exception {
+		executeImp(_arg);
+		if(nextHandler != null) {
+			nextHandler.execute(_arg);
+		}
 	}
 	
-	public void setAttributes(Map<String,Object> _attributes) {
-		attributes = _attributes;
-	}
-	
-	public Map<String,Object> getAttributes() {
-		return attributes;
+	protected Map<String,Object> attributes = new HashMap<String,Object>();
+
+	public void putAttribute(String _key, Object _value) {
+		attributes.put(_key, _value);
 	}
 	
 	public Object getAttribute(String _key) {
-		if(attributes == null) {
-			return null;
-		}
-		
 		return attributes.get(_key);
 	}
-	
-	//public void put(T _obj) throws Exception { }
-	
-	abstract public Object execute(T _obj) throws Exception;
+//	public void setAttributes(Map<String,Object> _attributes) {
+//		attributes = _attributes;
+//	}
+//	
+//	public Map<String,Object> getAttributes() {
+//		return attributes;
+//	}
+//	
+//	public Object getAttribute(String _key) {
+//		if(attributes == null) {
+//			return null;
+//		}
+//		
+//		return attributes.get(_key);
+//	}
 }
