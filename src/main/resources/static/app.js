@@ -41,6 +41,63 @@ function sendMessage() {
     stompClient.send("/ap/execute", {}, $("#name").val());//JSON.stringify({'name': $("#name").val()}));
 }
 
+//var queue = [];
+//
+//var maxQueueSize = 2;
+//function pushDataToQueue(_v, callback) {
+//	queue.push(_v);
+//	document.getElementById("senderId").innerHTML += ", " + _v.senderId;
+//	
+//	if(queue.length > maxQueueSize) {
+//		sortByKey(queue, timestamp);
+//		for(let i = 0; i < maxQueueSize; i++) {
+//			var data = queue.shift();
+//			callback(data);
+//		}
+//	}
+//}
+//
+//function sortByKey(array, key) {
+//    return array.sort(function(a, b) {
+//        var x = a.timestamp; var y = b.timestamp;
+//        console.log(x);
+//        console.log(y);
+//        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+//    });
+//}
+//
+//function pushDataToDyGraph(_v) {
+//	
+//    var rawDataSize = 10000;
+//    var oneSecond = 1000; // msec
+//    var N = 1000;
+//    var samplingTime = (N*oneSecond) / rawDataSize;
+//    
+//	var senderId = _v.senderId;
+//	var listDouble = _v.listDouble;
+//	var timestamp = parseInt(_v.timestamp);
+//	
+//	document.getElementById("deviceTime").innerHTML += ", " + timestamp;
+//
+//	var count = 0;
+//	for(var i = 0; i < listDouble.length; i++) {
+//	  if(i % N == 0) { // per 10ms, 1 sec / (10,000K data / #N ) = #N sec / 10,000 
+//			var x = timestamp + count*samplingTime;//new Date((timestamp + count*samplingTime));
+//	//	    	console.log(count);
+//	//	    	console.log(samplingTime);
+//			var y = parseFloat(listDouble[i]);
+//			if(x=="" || y=="") {
+//				return;
+//			}
+//		  data.push([x,y]);//y[0]]);
+//	//  		document.getElementById("d0Time").innerHTML = (timestamp + count*samplingTime);
+//	//  		document.getElementById("convertedtime").innerHTML = x;
+//		  count++;
+//	  }
+//	}
+//}
+var N = 100;
+
 function onMessageReceived(payload) {
 	// JSON.parse(payload.body).content
 //    $("#greetings").append("<tr><td>" + payload.body + "</td></tr>");
@@ -58,16 +115,32 @@ function onMessageReceived(payload) {
     var senderId = jsonObject.senderId;
     var listDouble = jsonObject.listDouble;
     var timestamp = parseInt(jsonObject.timestamp);
+    
+    var rawDataSize = 10000;
+    var oneSecond = 1000; // msec
+    var samplingTime = (N*oneSecond) / rawDataSize;
     if(senderId === "d0") {
-	    var count = 0;
+//    	var data = { "senderId":senderId, "timstamp":timestamp, "listDouble":listDouble }
+////    	pushDataToQueue(jsonObject, pushDataToDyGraph);
+//    	var convTime = new Date(timestamp);
+//    	document.getElementById("d0Time").innerHTML += "<br>" + jsonObject.timestamp + ", " + convTime;
+        
+    document.getElementById("senderId").innerHTML = senderId;
+    document.getElementById("timestamp").innerHTML = timestamp;
+
+    var count = 0;
 	    for(var i = 0; i < listDouble.length; i++) {
-	    	if(i % 1000 == 0) {
-		    	var x = new Date((timestamp + count*100));
+	    	if(i % N == 0) { // per 10ms, 1 sec / (10,000K data / #N ) = #N sec / 10,000 
+		    	var x = new Date((timestamp + count*samplingTime));
+//		    	console.log(count);
+//		    	console.log(samplingTime);
 		    	var y = parseFloat(listDouble[i]);
 				if(x=="" || y=="") {
 					return;
 				}
 	    		data.push([x,y]);//y[0]]);
+//	    		document.getElementById("d0Time").innerHTML = (timestamp + count*samplingTime);
+//	    		document.getElementById("convertedtime").innerHTML = x;
 	    		count++;
 	    	}
 	    }
@@ -84,15 +157,16 @@ $(function () {
 });
 
 var buffer = [];
-var dataSize = 100;
-var samplingTimeToUpdateChart = 100; // ms
+var dataSize = 1000;
+var samplingTimeToUpdateChart = 50; // ms
 var data = [];
 
 $(document).ready(function () {
 	
 	var t = new Date();
+	//document.getElementById("d0Time").innerHTML += "<br>" + t.getTime();
     for (var i = dataSize; i > 0; i--) {
-    	var x = new Date(t.getTime() - i * 10000);
+    	var x = new Date(t.getTime() - i * dataSize);
     	data.push([x, 0.0]);
     }
 

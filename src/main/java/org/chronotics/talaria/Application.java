@@ -6,9 +6,6 @@ import org.chronotics.talaria.thrift.ThriftService;
 import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
 import org.chronotics.talaria.common.Handler;
@@ -27,7 +24,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 		"org.chronotics.talaria.common",
 		"org.chronotics.talaria.websocket.springstompserver", 
 		"org.chronotics.talaria.thrift"})
-//@ComponentScan(basePackageClasses = {org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates.class})
 public class Application {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -78,9 +74,9 @@ public class Application {
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
 		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket(null);
+				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
 		
-		handlerWebsocketTask.putAttribute(
+		handlerWebsocketTask.putProperty(
 				HandlerMessageQueueToWebsocket.targetDestination,
 				targetDestination);
 		

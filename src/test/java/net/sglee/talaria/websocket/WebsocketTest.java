@@ -2,6 +2,7 @@ package net.sglee.talaria.websocket;
 
 import static org.junit.Assert.assertEquals;
 
+import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,11 @@ import net.sglee.automation.jobcontrol.Application;
 import net.sglee.talaria.websocket.server.WebsocketServerProperties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {WebsocketServerProperties.class})
-@TestPropertySource("classpath:./config/websocket.properties")
+@ContextConfiguration(classes = {SpringStompServerProperties.class})
+@TestPropertySource("classpath:./config/springstompserver.properties")
 public class WebsocketTest {
 	@Autowired
-	private WebsocketServerProperties serverProperties;
+	private SpringStompServerProperties serverProperties;
 	
 	@Test 
 	public void getSeverProperties() {		

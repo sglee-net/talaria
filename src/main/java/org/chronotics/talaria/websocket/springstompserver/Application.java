@@ -47,9 +47,9 @@ public class Application {
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
 		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket(null);
+				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
 		
-		handlerWebsocketTask.putAttribute(
+		handlerWebsocketTask.putProperty(
 				HandlerMessageQueueToWebsocket.targetDestination,
 				targetDestination);
 		

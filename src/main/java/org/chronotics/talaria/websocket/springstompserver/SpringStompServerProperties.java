@@ -17,7 +17,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
-	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+//	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:./config/springstompserver.properties")
 	})
 @Component
@@ -25,22 +25,22 @@ public class SpringStompServerProperties {
 	@Valid
 	@NotNull
 	@Value("${port}")
-	private String port;
-	public String getPort() {
+	private Integer port;
+	public Integer getPort() {
 		return port;
 	}
-	public void setPort(String _port) {
+	public void setPort(Integer _port) {
 		port = _port;
 	}
 	
 	@Valid
 	@NotNull
 	@Value("${sessionTimeout}")
-	private String sessionTimeout;
-	public String getSessionTimeout() {
+	private Integer sessionTimeout;
+	public Integer getSessionTimeout() {
 		return sessionTimeout;
 	}
-	public void setSessionTimeout(String _sessionTimeout) {
+	public void setSessionTimeout(Integer _sessionTimeout) {
 		sessionTimeout = _sessionTimeout;
 	}
 	
@@ -87,4 +87,15 @@ public class SpringStompServerProperties {
 	public void setTargetDestination(String _targetDestination) {
 		targetDestination = _targetDestination;
 	}
+	
+//	@Valid
+//	@NotNull
+//	@Value("${scheduledUpdatesDelay}")
+//	private String scheduledUpdatesDelay;
+//	public String getScheduledUpdatesDelay() {
+//		return scheduledUpdatesDelay;
+//	}
+//	public void setScheduledUpdatesDelay(String _scheduledUpdatesDelay) {
+//		scheduledUpdatesDelay = _scheduledUpdatesDelay;
+//	}
 }

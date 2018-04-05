@@ -1,5 +1,7 @@
 package org.chronotics.talaria.websocket.springstompserver;
 
+import java.util.concurrent.Future;
+
 import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
@@ -7,6 +9,7 @@ import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,7 +27,7 @@ import org.springframework.stereotype.Component;
 public class ScheduledUpdates<T> {
 	private static final Logger logger = 
 			LoggerFactory.getLogger(ScheduledUpdates.class);
-	
+
 	@Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -36,12 +39,12 @@ public class ScheduledUpdates<T> {
 			Handler<T> _handler) {
 		queueMapKey = _queueMapKey;
 		handler = _handler;
-		handler.putAttribute(
+		handler.putProperty(
 				HandlerMessageQueueToWebsocket.simpMessagingTemplate, 
 				simpMessagingTemplate);
 	}
 	
-    @Scheduled(fixedDelay=100)
+    @Scheduled(fixedDelayString = "${scheduledUpdatesDelay}")
     public void update(){
     	if(handler == null) {
     		logger.info("handler is null");
@@ -67,7 +70,16 @@ public class ScheduledUpdates<T> {
 		int count = msgqueue.size();
 		for (int i = 0; i < count; i++) {	
 			try {
-				handler.execute(msgqueue.poll());//(SimpMessagingTemplate)template);
+				T v = msgqueue.poll();
+				if(v != null) {
+					Future<T> future = handler.execute(v);//(SimpMessagingTemplate)template);
+					T rt = future.get();
+					if(rt == null) {
+						System.out.println("future is null");
+					} else {
+						//System.out.println(rt);
+					}
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
