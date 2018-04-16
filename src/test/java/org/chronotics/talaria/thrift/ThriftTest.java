@@ -9,15 +9,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ThriftProperties.class})
+@ContextConfiguration(classes = {ThriftServerProperties.class})
 public class ThriftTest {
 	@Autowired
-	private ThriftProperties properties;
+	private ThriftServerProperties properties;
 	
 	@Test 
 	public void getSeverProperties() {
-		assertEquals(properties.getServerIp(),"192.168.0.41");
-		assertEquals(properties.getServerPort(),"9091");
+		assertEquals(properties.getIp(),"192.168.0.41");
+		assertEquals(properties.getPort(),"9091");
 	}
 	
 	@Test 

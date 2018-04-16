@@ -13,7 +13,7 @@ public class TalariaContainerCustomizer implements EmbeddedServletContainerCusto
 	@Override
 	public void customize(ConfigurableEmbeddedServletContainer container) {
 		//System.out.println(httpServicePort);
-		container.setPort(httpServicePort);
+		container.setPort(httpServicePort);//8087);//
 	}
 
 }

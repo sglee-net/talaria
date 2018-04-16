@@ -30,10 +30,10 @@ public class Application {
 	public static void main(String[] args) {
 		// run spring boot
 		ApplicationContext context = SpringApplication.run(Application.class,args);
-//		String[] allBeanNames = context.getBeanDefinitionNames();
-////		for(String beanName : allBeanNames) {
-////			System.out.println(beanName);
-////		}
+		String[] allBeanNames = context.getBeanDefinitionNames();
+		for(String beanName : allBeanNames) {
+			System.out.println(beanName);
+		}
 		
 		// getProperties
 		TalariaProperties properties = 
@@ -42,12 +42,14 @@ public class Application {
 		if(properties == null) {
 			return;
 		}
+		
 		ThriftServerProperties thriftServerProperties = 
 				properties.getThriftServerProperties();
 		assert(thriftServerProperties != null);
 		if(thriftServerProperties == null) {
 			return;
 		}
+		
 		SpringStompServerProperties stompProperties = 
 				properties.getSpringStompServerProperties();
 		assert(stompProperties != null);
@@ -70,19 +72,19 @@ public class Application {
 		ThriftService thriftServiceHandler = new ThriftToMessageQueue(queueMapKey);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
  
-		// start websocket server
-		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
-		
-		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
-		
-		handlerWebsocketTask.putProperty(
-				HandlerMessageQueueToWebsocket.targetDestination,
-				targetDestination);
-		
-		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
-		
-//		Thread thread = new Thread(new DummyMessageGenerator());
-//		thread.start();
+//		// start websocket server
+//		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
+//		
+//		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
+//				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
+//		
+//		handlerWebsocketTask.putProperty(
+//				HandlerMessageQueueToWebsocket.targetDestination,
+//				targetDestination);
+//		
+//		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
+//		
+////		Thread thread = new Thread(new DummyMessageGenerator());
+////		thread.start();
 	}
 }
