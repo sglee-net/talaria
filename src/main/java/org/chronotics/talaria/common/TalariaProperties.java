@@ -22,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
-//	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:properties/talaria.properties")
 	})
 @ComponentScan(basePackages = {
@@ -44,7 +44,7 @@ public class TalariaProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${queueMapKey}")
+	@Value("${talaria.queueMapKey}")
 	private String queueMapKey;
 	public String getQueueMapKey() {
 		return queueMapKey;

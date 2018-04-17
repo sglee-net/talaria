@@ -11,14 +11,25 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
-//	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:./properties/thriftserver.properties")
 	})
 @Component
 public class ThriftServerProperties {
+//	@Valid
+//	@NotNull
+//	@Value("${thrift.httpPort}")
+//	private String httpPort;
+//	String getHttpPort() {
+//		return httpPort;
+//	}
+//	public void setHttpPort(String _port) {
+//		httpPort = _port;
+//	}
+	
 	@Valid
 	@NotNull	
-	@Value("${ip}")
+	@Value("${thrift.ip}")
 	private String ip;
 	String getIp() {
 		return ip;
@@ -29,7 +40,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${port}")
+	@Value("${thrift.port}")
 	private String port;
 	String getPort() {
 		return port;
@@ -40,7 +51,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${securePort}")
+	@Value("${thrift.securePort}")
 	private String securePort;
 	String getSecurePort() {
 		return securePort;
@@ -51,7 +62,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${secureKeyStore}")
+	@Value("${thrift.secureKeyStore}")
 	private String secureKeyStore;
 	String getSecureKeyStore() {
 		return secureKeyStore;
@@ -62,7 +73,7 @@ public class ThriftServerProperties {
 	
 	@Valid
 	@NotNull	
-	@Value("${secureKeyPass}")
+	@Value("${thrift.secureKeyPass}")
 	private String secureKeyPass;
 	String getSecureKeyPass() {
 		return secureKeyPass;

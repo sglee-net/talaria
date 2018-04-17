@@ -10,25 +10,15 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
 import org.chronotics.talaria.thrift.gen.TransferService;
+import org.springframework.beans.factory.annotation.Value;
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
 
-public class ThriftServer {			
+public class ThriftServer {
 	
 	public static void startServer(
 			TransferService.Iface _serviceHandler, 
 			ThriftServerProperties _properties) {        
-		try {
-//			TransferService.Iface serviceHandler = null;		
-//			if(_handler_type.equals(TransferServiceHandler.class.getName())) {
-//				serviceHandler = new TransferServiceHandler();				
-//			} else if(_handler_type.equals(
-//					TransferServiceHandler.class.getName())) {
-//				serviceHandler = new TransferServiceHandler();
-//			} else {
-//				serviceHandler = new TransferServiceHandler();
-//			}
-//			serviceHandler = new ThriftHandler();
-			
+		try {			
 			final TransferService.Processor<TransferService.Iface> processor = 
 					new TransferService.Processor<TransferService.Iface>(_serviceHandler);
 			
@@ -36,17 +26,8 @@ public class ThriftServer {
 				public void run() {
 					server(processor, _properties);
 				}
-			};      
-			
-//			Runnable secure = new Runnable() {
-//				public void run() {
-//					secure(processor);
-//				}
-//			};
-  	      
+			};      	      
 			new Thread(server).start();
-			
-//			new Thread(secure).start();
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
@@ -62,9 +43,8 @@ public class ThriftServer {
 			InetAddress listenAddress = InetAddress.getByName(ip);
 			TServerTransport serverTransport = new TServerSocket(
     				new InetSocketAddress(listenAddress, port));
-    		
+    		// Simple server
     		//TServer server = new TSimpleServer(new Args(serverTransport).processor(processor));
-    		
     		// Use this for a multithreaded server
     		TServer server = 
     				new TThreadPoolServer(

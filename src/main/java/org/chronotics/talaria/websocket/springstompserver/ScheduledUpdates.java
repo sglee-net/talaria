@@ -44,7 +44,7 @@ public class ScheduledUpdates<T> {
 				simpMessagingTemplate);
 	}
 	
-    @Scheduled(fixedDelayString = "${scheduledUpdatesDelay}")
+    @Scheduled(fixedDelayString = "${stompserverapp.scheduledUpdatesDelay}")
     public void update(){
     	if(handler == null) {
     		logger.info("handler is null");

@@ -24,7 +24,7 @@ import org.springframework.validation.annotation.Validated;
 public class SpringStompServerProperties {
 	@Valid
 	@NotNull
-	@Value("${port}")
+	@Value("${stompserver.port}")
 	private Integer port;
 	public Integer getPort() {
 		return port;
@@ -35,7 +35,7 @@ public class SpringStompServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${sessionTimeout}")
+	@Value("${stompserver.sessionTimeout}")
 	private Integer sessionTimeout;
 	public Integer getSessionTimeout() {
 		return sessionTimeout;
@@ -46,7 +46,7 @@ public class SpringStompServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${destinationTopic}")
+	@Value("${stompserver.destinationTopic}")
 	private String destinationTopic;
 	public String getDestinationTopic() {
 		return destinationTopic;
@@ -57,7 +57,7 @@ public class SpringStompServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${destinationPrefix}")
+	@Value("${stompserver.destinationPrefix}")
 	private String destinationPrefix;
 	public String getDestinationPrefix() {
 		return destinationPrefix;
@@ -68,7 +68,7 @@ public class SpringStompServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${endPoint}")
+	@Value("${stompserver.endPoint}")
 	private String endPoint;
 	public String getEndPoint() {
 		return endPoint;
@@ -79,7 +79,7 @@ public class SpringStompServerProperties {
 	
 	@Valid
 	@NotNull
-	@Value("${targetDestination}")
+	@Value("${stompserver.targetDestination}")
 	private String targetDestination;
 	public String getTargetDestination() {
 		return targetDestination;
@@ -87,15 +87,4 @@ public class SpringStompServerProperties {
 	public void setTargetDestination(String _targetDestination) {
 		targetDestination = _targetDestination;
 	}
-	
-//	@Valid
-//	@NotNull
-//	@Value("${scheduledUpdatesDelay}")
-//	private String scheduledUpdatesDelay;
-//	public String getScheduledUpdatesDelay() {
-//		return scheduledUpdatesDelay;
-//	}
-//	public void setScheduledUpdatesDelay(String _scheduledUpdatesDelay) {
-//		scheduledUpdatesDelay = _scheduledUpdatesDelay;
-//	}
 }

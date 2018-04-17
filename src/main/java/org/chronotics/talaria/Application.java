@@ -8,10 +8,11 @@ import org.chronotics.talaria.websocket.springstompserver.SpringStompServerPrope
 
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
 import org.chronotics.talaria.impl.ThriftToMessageQueue;
+import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.common.MessageQueue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -29,11 +30,17 @@ public class Application {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		// run spring boot
-		ApplicationContext context = SpringApplication.run(Application.class,args);
-		String[] allBeanNames = context.getBeanDefinitionNames();
-		for(String beanName : allBeanNames) {
-			System.out.println(beanName);
-		}
+		ApplicationContext context = SpringApplication
+				.run(Application.class,args);
+		
+//		SpringApplicationBuilder(Application.class)
+//		.properties(
+//				"spring.config.location=" + "classpath:/.yml" + ", file:/data//" + ", file:/data/.yml" )
+
+//		String[] allBeanNames = context.getBeanDefinitionNames();
+//		for(String beanName : allBeanNames) {
+//			System.out.println(beanName);
+//		}
 		
 		// getProperties
 		TalariaProperties properties = 
@@ -72,19 +79,20 @@ public class Application {
 		ThriftService thriftServiceHandler = new ThriftToMessageQueue(queueMapKey);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
  
-//		// start websocket server
-//		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
-//		
-//		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-//				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
-//		
-//		handlerWebsocketTask.putProperty(
-//				HandlerMessageQueueToWebsocket.targetDestination,
-//				targetDestination);
-//		
-//		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
-//		
-////		Thread thread = new Thread(new DummyMessageGenerator());
-////		thread.start();
+		// start websocket server
+		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
+		
+		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
+				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
+		
+		handlerWebsocketTask.putProperty(
+				HandlerMessageQueueToWebsocket.targetDestination,
+				targetDestination);
+		
+		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
+		
+//		Thread thread = new Thread(new DummyMessageGenerator());
+//		thread.start();
 	}
+	
 }
