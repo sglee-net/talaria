@@ -11,8 +11,8 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
-	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:./properties/thriftserver.properties")
+	@PropertySource(value = "classpath:properties/missing.properties", ignoreResourceNotFound=true),
+	@PropertySource("classpath:properties/thriftserver.properties")
 	})
 @Component
 public class ThriftServerProperties {

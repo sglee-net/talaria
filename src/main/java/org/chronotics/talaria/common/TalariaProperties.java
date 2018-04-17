@@ -22,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
-	@PropertySource(value = "classpath:missing.properties", ignoreResourceNotFound=true),
+	@PropertySource(value = "classpath:properties/missing.properties", ignoreResourceNotFound=true),
 	@PropertySource("classpath:properties/talaria.properties")
 	})
 @ComponentScan(basePackages = {

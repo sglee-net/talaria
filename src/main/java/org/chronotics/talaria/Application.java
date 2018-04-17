@@ -33,66 +33,73 @@ public class Application {
 		ApplicationContext context = SpringApplication
 				.run(Application.class,args);
 		
-//		SpringApplicationBuilder(Application.class)
-//		.properties(
-//				"spring.config.location=" + "classpath:/.yml" + ", file:/data//" + ", file:/data/.yml" )
-
-//		String[] allBeanNames = context.getBeanDefinitionNames();
-//		for(String beanName : allBeanNames) {
-//			System.out.println(beanName);
+////		SpringApplicationBuilder(Application.class)
+////		.properties(
+////				"spring.config.location=" + "classpath:/.yml" + ", file:/data//" + ", file:/data/.yml" )
+//
+////		String[] allBeanNames = context.getBeanDefinitionNames();
+////		for(String beanName : allBeanNames) {
+////			System.out.println(beanName);
+////		}
+		
+//		// getProperties
+//		TalariaProperties properties = 
+//				(TalariaProperties)context.getBean("talariaProperties");
+//		assert(properties != null);
+//		if(properties == null) {
+//			return;
 //		}
+//		
+//		String queueMapKey = properties.getQueueMapKey();
+//		
+//		// register message queue
+//		if(MessageQueueMap.getInstance().getMessageQueue(queueMapKey) == null) {
+//			MessageQueue<String> msgqueue = 
+//					new MessageQueue<String>(
+//							String.class,
+//							MessageQueue.default_maxQueueSize,
+//							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+//			MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
+//		}
+//		
+//
+//		// thrift server properties
+//		ThriftServerProperties thriftServerProperties = 
+//				properties.getThriftServerProperties();
+//		assert(thriftServerProperties != null);
+//		if(thriftServerProperties == null) {
+//			return;
+//		}
+//		
+//		// start thrift server
+//		ThriftService thriftServiceHandler = new ThriftToMessageQueue(queueMapKey);
+//		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
+// 
+//		// websocket server properties
+//		SpringStompServerProperties stompProperties = 
+//				properties.getSpringStompServerProperties();
+//		assert(stompProperties != null);
+//		if(stompProperties == null) {
+//			return;
+//		}
+//		
+//		String targetDestination = stompProperties.getTargetDestination();
+//		
+//		// start websocket server
+//		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
+//		
+//		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
+//				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
+//		
+//		handlerWebsocketTask.putProperty(
+//				HandlerMessageQueueToWebsocket.targetDestination,
+//				targetDestination);
+//		
+//		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
+//		
 		
-		// getProperties
-		TalariaProperties properties = 
-				(TalariaProperties)context.getBean("talariaProperties");
-		assert(properties != null);
-		if(properties == null) {
-			return;
-		}
-		
-		ThriftServerProperties thriftServerProperties = 
-				properties.getThriftServerProperties();
-		assert(thriftServerProperties != null);
-		if(thriftServerProperties == null) {
-			return;
-		}
-		
-		SpringStompServerProperties stompProperties = 
-				properties.getSpringStompServerProperties();
-		assert(stompProperties != null);
-		if(stompProperties == null) {
-			return;
-		}
-		
-		String targetDestination = stompProperties.getTargetDestination();
-		String queueMapKey = properties.getQueueMapKey(); //"vib";
-		
-		// register message queue
-		MessageQueue<String> msgqueue = 
-				new MessageQueue<String>(
-						String.class,
-						MessageQueue.default_maxQueueSize,
-						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-		MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
-
-		// start thrift server
-		ThriftService thriftServiceHandler = new ThriftToMessageQueue(queueMapKey);
-		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
- 
-		// start websocket server
-		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
-		
-		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
-		
-		handlerWebsocketTask.putProperty(
-				HandlerMessageQueueToWebsocket.targetDestination,
-				targetDestination);
-		
-		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
-		
-//		Thread thread = new Thread(new DummyMessageGenerator());
-//		thread.start();
+////		Thread thread = new Thread(new DummyMessageGenerator());
+////		thread.start();
 	}
 	
 }
