@@ -1,6 +1,9 @@
 package org.chronotics.talaria.impl;
 
 import org.chronotics.talaria.common.Handler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -15,6 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
+	private static final Logger logger = 
+			LoggerFactory.getLogger(HandlerMessageQueueToWebsocket.class);
+	
 	public HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE _propagationRuel, Handler<T> _nextHandler) {
 		super(_propagationRuel, _nextHandler);
 		// TODO Auto-generated constructor stub
@@ -81,24 +87,28 @@ public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
 	
 		@SuppressWarnings("unchecked")
 		Class<T> cls = (Class<T>)value.getClass();
-		if(cls == Boolean.class) {
-			simpMessagingTemplate.convertAndSend(targetDestination,(Boolean)value);	
-		} else if (cls == Integer.class) {
-			simpMessagingTemplate.convertAndSend(targetDestination,(Integer)value);	
-		} else if (cls == Short.class) {
-			simpMessagingTemplate.convertAndSend(targetDestination,(Short)value);	
-		} else if (cls == Long.class) {
-			simpMessagingTemplate.convertAndSend(targetDestination,(Long)value);	
-		} else if (cls == Double.class) {
-			simpMessagingTemplate.convertAndSend(targetDestination,(Double)value);	
-		} else if (cls == String.class) {
-			simpMessagingTemplate.convertAndSend(targetDestination,(String)value);
-			JsonNode rootnode = mapper.readTree((String)value);
-			JsonNode timenode = rootnode.findValue("timestamp");
-			System.out.println(timenode.asText());
-			
-		} else {
-			throw new ClassCastException("undefine type");
+		try {
+			if(cls == Boolean.class) {
+				simpMessagingTemplate.convertAndSend(targetDestination,(Boolean)value);	
+			} else if (cls == Integer.class) {
+				simpMessagingTemplate.convertAndSend(targetDestination,(Integer)value);	
+			} else if (cls == Short.class) {
+				simpMessagingTemplate.convertAndSend(targetDestination,(Short)value);	
+			} else if (cls == Long.class) {
+				simpMessagingTemplate.convertAndSend(targetDestination,(Long)value);	
+			} else if (cls == Double.class) {
+				simpMessagingTemplate.convertAndSend(targetDestination,(Double)value);	
+			} else if (cls == String.class) {
+				simpMessagingTemplate.convertAndSend(targetDestination,(String)value);
+				JsonNode rootnode = mapper.readTree((String)value);
+				JsonNode timenode = rootnode.findValue("timestamp");
+				System.out.println(timenode.asText());
+				
+			} else {
+				throw new ClassCastException("undefine type");
+			}
+		} catch (MessagingException e) {
+			logger.error(e.getMessage());
 		}
 		return value;
 	}
