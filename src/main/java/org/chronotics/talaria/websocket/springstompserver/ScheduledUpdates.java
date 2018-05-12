@@ -70,14 +70,15 @@ public class ScheduledUpdates<T> {
 		int count = msgqueue.size();
 		for (int i = 0; i < count; i++) {	
 			try {
-				T v = msgqueue.poll();
+				T v = msgqueue.peek();
 				if(v != null) {
 					Future<T> future = handler.execute(v);//(SimpMessagingTemplate)template);
 					T rt = future.get();
 					if(rt == null) {
-						System.out.println("future is null");
+						//System.out.println("future is null");
+						logger.error("Handler execution error, future return is null");
 					} else {
-						//System.out.println(rt);
+						msgqueue.poll();
 					}
 				}
 			} catch (Exception e) {
