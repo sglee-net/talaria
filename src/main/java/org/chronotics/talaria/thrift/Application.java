@@ -11,7 +11,7 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.impl.ThriftToMessageQueue;
+import org.chronotics.talaria.impl.ThriftWithMessageQueue;
 import org.chronotics.talaria.common.Handler;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.thrift.gen.TransferService;
@@ -83,7 +83,7 @@ public class Application {
 		MessageQueueMap.getInstance().put(queueMapKey, msgqueue);	
 
 		// start thrift server
-		ThriftService thriftServiceHandler = new ThriftToMessageQueue(queueMapKey);
+		ThriftService thriftServiceHandler = new ThriftWithMessageQueue();//queueMapKey);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
 	}
 }

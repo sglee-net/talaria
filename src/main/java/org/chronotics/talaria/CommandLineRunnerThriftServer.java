@@ -3,7 +3,7 @@ package org.chronotics.talaria;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.impl.ThriftToMessageQueue;
+import org.chronotics.talaria.impl.ThriftWithMessageQueue;
 import org.chronotics.talaria.thrift.ThriftServer;
 import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.thrift.ThriftService;
@@ -49,7 +49,7 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		}
 		
 		// start thrift server
-		ThriftService thriftServiceHandler = new ThriftToMessageQueue(queueMapKey);
+		ThriftService thriftServiceHandler = new ThriftWithMessageQueue();
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
 	}
 }

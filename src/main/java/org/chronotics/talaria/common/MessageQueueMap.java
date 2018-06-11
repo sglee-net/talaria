@@ -1,6 +1,9 @@
 package org.chronotics.talaria.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -31,7 +34,14 @@ public class MessageQueueMap {
 		return map.get(_key);
 	}
 	
-	public void put(String _key,MessageQueue<?> _value) {
-		map.put(_key, _value);
+	public boolean put(String _key,MessageQueue<?> _value) {
+		MessageQueue<?> V = map.put(_key, _value);
+		return V==null? true : false;
+	}
+	
+	public List<String> getKeys() {
+		List<String> rt = new ArrayList<String>();
+		rt.addAll(map.keySet());
+		return rt;
 	}
 }

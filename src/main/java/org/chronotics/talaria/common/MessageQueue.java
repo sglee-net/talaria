@@ -104,10 +104,22 @@ public class MessageQueue<E> implements Iterable<E> {
 		return queue.offer(e);
 	}
 	
+	/**
+	 * Description copied from interface: Queue
+	 * Retrieves, but does not remove, the head of this queue, or returns null if this queue is empty.
+	 * @return
+	 * the head of this queue, or null if this queue is empty
+	 */
 	public E peek() {
 		return queue.peek();
 	}
 	
+	/**
+	 * Description copied from interface: Queue
+	 * Retrieves and removes the head of this queue, or returns null if this queue is empty.
+	 * @return
+	 * the head of this queue, or null if this queue is empty
+	 */
 	public E poll() {
 		return queue.poll(); 
 	}
