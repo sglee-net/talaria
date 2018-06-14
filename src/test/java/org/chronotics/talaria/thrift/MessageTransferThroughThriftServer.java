@@ -3,12 +3,14 @@ package org.chronotics.talaria.thrift;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
+import org.chronotics.talaria.thrift.gen.Message;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -71,7 +73,7 @@ public class MessageTransferThroughThriftServer {
 		for(int i=0; i<keySize; i++) {
 			MessageQueue<String> mq = 
 					(MessageQueue<String>) 
-					mqMap.getMessageQueue(keyList.get(i));
+					mqMap.get(keyList.get(i));
 			assertTrue(mq!=null);
 		}
 	}
@@ -83,7 +85,7 @@ public class MessageTransferThroughThriftServer {
 		for(int i=0; i<keySize; i++) {
 			MessageQueue<String> mq = 
 					(MessageQueue<String>) 
-					mqMap.getMessageQueue(keyList.get(i));
+					mqMap.get(keyList.get(i));
 			assertTrue(mq==null);
 		}
 	}
@@ -93,22 +95,43 @@ public class MessageTransferThroughThriftServer {
 		startServer();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		for(int i=0; i<keySize; i++) {
-			MessageQueue<String> mq = 
-					(MessageQueue<String>) 
-					mqMap.getMessageQueue(keyList.get(i));
+			MessageQueue<Message> mq = 
+					(MessageQueue<Message>) 
+					mqMap.get(keyList.get(i));
 			if(mq==null) {
-				mq = new MessageQueue<String>(
-							String.class,
+				mq = new MessageQueue<Message>(
+						Message.class,
 							MessageQueue.default_maxQueueSize,
 							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 				mqMap.put(keyList.get(i), mq);
 			}
 		}
-		for(int i=0; i<keySize; i++) {
-			MessageQueue<String> mq = 
-					(MessageQueue<String>) 
-					mqMap.getMessageQueue(keyList.get(i));
-			mq.add(String.valueOf(i));
+		
+		int count = 0;
+		while(true) {
+			if(count >= 50) {
+				break;
+			}
+			for(int i=0; i<keySize; i++) {
+				MessageQueue<Message> mq = 
+						(MessageQueue<Message>) 
+						mqMap.get(keyList.get(i));
+				Message message = new Message();
+				Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+				String _payload = timestamp.toString();
+				message.set_timestamp(timestamp.toString());
+				message.set_sender_id(String.valueOf(i));
+				message.set_payload(_payload);
+				
+				mq.add(message);
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			count++;
 		}
 		
 		try {
@@ -118,13 +141,53 @@ public class MessageTransferThroughThriftServer {
 			e.printStackTrace();
 		}
 		
-		assertTrue(true);
-		
 		for(int i=0; i<keySize; i++) {
 			MessageQueue<String> mq = 
 					(MessageQueue<String>) 
-					mqMap.getMessageQueue(keyList.get(i));
-			assertTrue(mq.size()==0);
+					mqMap.get(keyList.get(i));
+			assertEquals(0, mq.size());
 		}
+	}
+	
+	@Test
+	public void checkMessage() {
+//		startServer();
+//		MessageQueueMap mqMap = MessageQueueMap.getInstance();
+//		for(int i=0; i<keySize; i++) {
+//			MessageQueue<String> mq = 
+//					(MessageQueue<String>) 
+//					mqMap.get(keyList.get(i));
+//			if(mq==null) {
+//				mq = new MessageQueue<String>(
+//							String.class,
+//							MessageQueue.default_maxQueueSize,
+//							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+//				mqMap.put(keyList.get(i), mq);
+//			}
+//		}
+//		for(int i=0; i<keySize; i++) {
+//			MessageQueue<String> mq = 
+//					(MessageQueue<String>) 
+//					mqMap.get(keyList.get(i));
+//			mq.add(String.valueOf(i) 
+//					+ ", " 
+//					+ new Timestamp(System.currentTimeMillis()).toString());
+//		}
+//		
+//		try {
+//			Thread.sleep(delay);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		assertTrue(true);
+//		
+//		for(int i=0; i<keySize; i++) {
+//			MessageQueue<String> mq = 
+//					(MessageQueue<String>) 
+//					mqMap.get(keyList.get(i));
+//			assertEquals(0, mq.size());
+//		}
 	}
 }

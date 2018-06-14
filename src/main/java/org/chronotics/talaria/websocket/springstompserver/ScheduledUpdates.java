@@ -58,7 +58,7 @@ public class ScheduledUpdates<T> {
     	
 		MessageQueue<T> msgqueue = (MessageQueue<T>)
 				MessageQueueMap.getInstance().
-				getMessageQueue(queueMapKey);
+				get(queueMapKey);
 		assert(msgqueue != null);
 		if(msgqueue == null) {
 			throw new NullPointerException();

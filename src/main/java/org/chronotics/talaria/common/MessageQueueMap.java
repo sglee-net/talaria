@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,21 +28,37 @@ public class MessageQueueMap {
 	private MessageQueueMap() {
 	}
 	
-	private Map<String,MessageQueue<?>> map = 
-			new ConcurrentHashMap<String,MessageQueue<?>>();
+	private Map<Object,MessageQueue<?>> map = 
+			new ConcurrentHashMap<Object,MessageQueue<?>>();
 	
-	public MessageQueue<?> getMessageQueue(String _key) {
+	public MessageQueue<?> get(Object _key) {
 		return map.get(_key);
 	}
 	
-	public boolean put(String _key,MessageQueue<?> _value) {
+	public boolean put(Object _key,MessageQueue<?> _value) {
 		MessageQueue<?> V = map.put(_key, _value);
 		return V==null? true : false;
 	}
 	
-	public List<String> getKeys() {
-		List<String> rt = new ArrayList<String>();
+	public List<Object> getKeys() {
+		List<Object> rt = new ArrayList<Object>();
 		rt.addAll(map.keySet());
 		return rt;
+	}
+	
+	public boolean containsKey(Object _key) {
+		return map.containsKey(_key);
+	}
+	
+	public boolean isEmpty() {
+		return map.isEmpty();
+	}
+	
+	public int size() {
+		return map.size();
+	}
+	
+	public Set<Entry<Object, MessageQueue<?>>> entrySet() {
+		return map.entrySet();
 	}
 }

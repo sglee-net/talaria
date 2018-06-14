@@ -32,7 +32,7 @@ public class CommandLineRunnerSpringStompServer implements CommandLineRunner {
 		String queueMapKey = properties.getQueueMapKey();
 		
 		// register message queue
-		if(MessageQueueMap.getInstance().getMessageQueue(queueMapKey) == null) {
+		if(MessageQueueMap.getInstance().get(queueMapKey) == null) {
 			MessageQueue<String> msgqueue = 
 					new MessageQueue<String>(
 							String.class,

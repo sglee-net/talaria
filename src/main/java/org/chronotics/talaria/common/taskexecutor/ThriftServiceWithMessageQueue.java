@@ -1,7 +1,9 @@
 package org.chronotics.talaria.common.taskexecutor;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
@@ -29,7 +31,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		String id = _v.get_sender_id();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		MessageQueue<Message> mq = 
-				(MessageQueue<Message>) mqMap.getMessageQueue(id);
+				(MessageQueue<Message>) mqMap.get(id);
 		if(mq == null) {
 			mq = new MessageQueue<Message>(
 					Message.class,
@@ -48,8 +50,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 	public void writeBool(String _id, boolean _v) throws TException {
 		MessageQueue<Boolean> mq = 
 				(MessageQueue<Boolean>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
+				MessageQueueMap.getInstance()
+				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
@@ -63,8 +65,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 	public void writeI16(String _id, short _v) throws TException {
 		MessageQueue<Short> mq = 
 				(MessageQueue<Short>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
+				MessageQueueMap.getInstance()
+				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
@@ -78,8 +80,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 	public void writeI32(String _id, int _v) throws TException {
 		MessageQueue<Integer> mq = 
 				(MessageQueue<Integer>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
+				MessageQueueMap.getInstance()
+				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
@@ -93,8 +95,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 	public void writeI64(String _id, long _v) throws TException {
 		MessageQueue<Long> mq = 
 				(MessageQueue<Long>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
+				MessageQueueMap.getInstance()
+				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
@@ -108,8 +110,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 	public void writeDouble(String _id, double _v) throws TException {
 		MessageQueue<Double> mq = 
 				(MessageQueue<Double>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
+				MessageQueueMap.getInstance()
+				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
@@ -124,8 +126,8 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		// TODO Auto-generated method stub
 		MessageQueue<String> mq = 
 				(MessageQueue<String>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
+				MessageQueueMap.getInstance()
+				.get(_id);
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
@@ -137,39 +139,43 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 
 	@Override
 	public Message readMessage(String _id) throws TException {
-//		MessageQueue<Message> mq = 
-//				(MessageQueue<Message>) 
-//				MessageQueueMap.getInstance().
-//				getMessageQueue(_id);
-//		assert(mq != null);
-//		if(mq == null) {
-//			throw new TException("There is no matching queue with id");
-//		}
-//		Message rt = mq.poll();
-//		if(rt == null) {
+		MessageQueue<Message> mq = 
+				(MessageQueue<Message>) 
+				MessageQueueMap.getInstance()
+				.get(_id);
+		if( mq == null) {
+			throw new TException("There is no matching queue with id");
+		}
+
+		Message value = mq.poll();
+		if(value == null) {
+			return null;
 //			throw new TException("Queue is empty");
-//		} else {
-//			return rt;
-//		}
+		} else {
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
+		}
 		
-		// TODO Auto-generated method stub
-		Message message = new Message();
-		String _payload = "Starting the simple server...";
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		message.set_timestamp(timestamp.toString());
-		message.set_sender_id("sender");
-//		message.set_receiver_id(_receiver_id);
-//		message.set_subject("subject");
-//		message.set_sequence_no(0);
-//		message.set_list_bool(new ArrayList<Boolean>());
-//		message.set_list_double(new ArrayList<Double>());
-//		message.set_list_i16(new ArrayList<Short>());
-//		message.set_list_i32(new ArrayList<Integer>());
-//		message.set_list_i64(new ArrayList<Long>());
-//		message.set_list_string(new ArrayList<String>());
-//		message.set_binary(new byte[1]);
-		message.set_payload(_payload);
-		return message;
+//		// TODO Auto-generated method stub
+//		Message message = new Message();
+//		String _payload = "Starting the simple server...";
+//		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+//		message.set_timestamp(timestamp.toString());
+//		message.set_sender_id("sender");
+////		message.set_receiver_id(_receiver_id);
+////		message.set_subject("subject");
+////		message.set_sequence_no(0);
+////		message.set_list_bool(new ArrayList<Boolean>());
+////		message.set_list_double(new ArrayList<Double>());
+////		message.set_list_i16(new ArrayList<Short>());
+////		message.set_list_i32(new ArrayList<Integer>());
+////		message.set_list_i64(new ArrayList<Long>());
+////		message.set_list_string(new ArrayList<String>());
+////		message.set_binary(new byte[1]);
+//		message.set_payload(_payload);
+//		return message;
 	}
 
 	@Override
@@ -177,7 +183,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		MessageQueue<Boolean> mq = 
 				(MessageQueue<Boolean>) 
 				MessageQueueMap.getInstance()
-				.getMessageQueue(_id);
+				.get(_id);
 		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
@@ -198,7 +204,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		MessageQueue<Short> mq = 
 				(MessageQueue<Short>) 
 				MessageQueueMap.getInstance()
-				.getMessageQueue(_id);
+				.get(_id);
 		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
@@ -219,7 +225,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		MessageQueue<Integer> mq = 
 				(MessageQueue<Integer>) 
 				MessageQueueMap.getInstance()
-				.getMessageQueue(_id);
+				.get(_id);
 		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
@@ -239,7 +245,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		MessageQueue<Long> mq = 
 				(MessageQueue<Long>) 
 				MessageQueueMap.getInstance()
-				.getMessageQueue(_id);
+				.get(_id);
 		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
@@ -259,7 +265,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		MessageQueue<Double> mq = 
 				(MessageQueue<Double>) 
 				MessageQueueMap.getInstance()
-				.getMessageQueue(_id);
+				.get(_id);
 		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
@@ -279,7 +285,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		MessageQueue<String> mq = 
 				(MessageQueue<String>) 
 				MessageQueueMap.getInstance()
-				.getMessageQueue(_id);
+				.get(_id);
 		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
@@ -296,18 +302,26 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 
 	@Override
 	public boolean writeId(String _id) throws TException {
+		MessageQueueMap mqMap = MessageQueueMap.getInstance();
+		if(mqMap.containsKey(_id)) {
+			return false;
+		}
+		
 		MessageQueue<String> mq = 
 				new MessageQueue<String>(
-						String.class,
-						MessageQueue.default_maxQueueSize,
-						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-		MessageQueueMap mqMap = MessageQueueMap.getInstance();
+					String.class,
+					MessageQueue.default_maxQueueSize,
+					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
 		return mqMap.put(_id, mq);
 	}
 
 	@Override
 	public List<String> readId() throws TException {
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		return mqMap.getKeys();
+		List<String> rt = new ArrayList<String>();
+		for(Entry<Object, MessageQueue<?>> entry : mqMap.entrySet()) {
+			rt.add((String) entry.getKey());
+		}
+		return rt;
 	}
 }

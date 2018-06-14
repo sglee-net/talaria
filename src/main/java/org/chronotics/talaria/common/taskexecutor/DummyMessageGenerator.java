@@ -30,7 +30,7 @@ public class DummyMessageGenerator implements Runnable {
 //		}
 		MessageQueue<String> msgqueue = (MessageQueue<String>) 
 			MessageQueueMap.getInstance()
-			.getMessageQueue("vibration");//properties.getQueueMapKey());//"vib");
+			.get("vibration");//properties.getQueueMapKey());//"vib");
 		if(msgqueue != null) {
 			int i = 0;
 			while(msgqueue.size() < count) {
