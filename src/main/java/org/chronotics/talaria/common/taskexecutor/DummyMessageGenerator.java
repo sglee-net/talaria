@@ -1,4 +1,4 @@
-package org.chronotics.talaria.impl;
+package org.chronotics.talaria.common.taskexecutor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

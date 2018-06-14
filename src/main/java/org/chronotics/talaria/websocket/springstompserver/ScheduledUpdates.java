@@ -2,10 +2,10 @@ package org.chronotics.talaria.websocket.springstompserver;
 
 import java.util.concurrent.Future;
 
-import org.chronotics.talaria.common.Handler;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @author SG Lee
  * @since 3/20/2015
  * @description
- * The registered handler will be called every fixedDelay.
+ * The registered executor will be called every fixedDelay.
  * This class is to handle Messagequeue that contains messages that 
  * might be sent by another Class.
  */
@@ -33,21 +33,21 @@ public class ScheduledUpdates<T> {
 
 	public String queueMapKey = null;
 
-	private Handler<T> handler = null;
+	private TaskExecutor<T> executor = null;
 	public void setAttribute(
 			String _queueMapKey, 
-			Handler<T> _handler) {
+			TaskExecutor<T> _executor) {
 		queueMapKey = _queueMapKey;
-		handler = _handler;
-		handler.putProperty(
-				HandlerMessageQueueToWebsocket.simpMessagingTemplate, 
+		executor = _executor;
+		executor.putProperty(
+				MessageQueueToWebsocketServer.simpMessagingTemplate, 
 				simpMessagingTemplate);
 	}
 	
     @Scheduled(fixedDelayString = "${stompserverapp.scheduledUpdatesDelay}")
     public void update(){
-    	if(handler == null) {
-    		logger.info("handler is null");
+    	if(executor == null) {
+    		logger.info("executor is null");
     		return;
     	}
 	
@@ -72,11 +72,11 @@ public class ScheduledUpdates<T> {
 			try {
 				T v = msgqueue.peek();
 				if(v != null) {
-					Future<T> future = handler.execute(v);//(SimpMessagingTemplate)template);
+					Future<T> future = executor.execute(v);//(SimpMessagingTemplate)template);
 					T rt = future.get();
 					if(rt == null) {
 						//System.out.println("future is null");
-						logger.error("Handler execution error, future return is null");
+						logger.error("TaskExecutor execution error, future return is null");
 					} else {
 						msgqueue.poll();
 					}

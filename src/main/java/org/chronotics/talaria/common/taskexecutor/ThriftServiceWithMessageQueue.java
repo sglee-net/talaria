@@ -1,4 +1,4 @@
-package org.chronotics.talaria.impl;
+package org.chronotics.talaria.common.taskexecutor;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -6,30 +6,42 @@ import java.util.List;
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.thrift.MessageToJson;
 import org.chronotics.talaria.thrift.ThriftService;
+import org.chronotics.talaria.thrift.ThriftServiceExecutor;
 import org.chronotics.talaria.thrift.gen.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ThriftWithMessageQueue implements ThriftService {
+public class ThriftServiceWithMessageQueue implements ThriftService {
+
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
+	
+	private ThriftServiceExecutor executor = null;
+
+	public ThriftServiceWithMessageQueue(
+			ThriftServiceExecutor _executor) {
+		executor = _executor;
+	}
 
 	@Override
 	public void writeMessage(Message _v) throws TException { 
 		String id = _v.get_sender_id();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue<String> mq = 
-				(MessageQueue<String>) mqMap.getMessageQueue(id);
+		MessageQueue<Message> mq = 
+				(MessageQueue<Message>) mqMap.getMessageQueue(id);
 		if(mq == null) {
-			mq = new MessageQueue<String>(
-						String.class,
-						MessageQueue.default_maxQueueSize,
-						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+			mq = new MessageQueue<Message>(
+					Message.class,
+					MessageQueue.default_maxQueueSize,
+					MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
+			mqMap.put(id, mq);
 		}
-		mq.add(MessageToJson.convert(_v));
-		mqMap.put(id, mq);
+		mq.add(_v);//MessageToJson.convert(_v));
+		
+		if(executor != null) {
+			executor.executeToWrite(_v);
+		}
 	}
 
 	@Override
@@ -41,6 +53,9 @@ public class ThriftWithMessageQueue implements ThriftService {
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
+		}
+		if(executor != null) {
+			executor.executeToWrite(_v);
 		}
 	}
 
@@ -54,6 +69,9 @@ public class ThriftWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		if(executor != null) {
+			executor.executeToWrite(_v);
+		}
 	}
 
 	@Override
@@ -65,6 +83,9 @@ public class ThriftWithMessageQueue implements ThriftService {
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
+		}
+		if(executor != null) {
+			executor.executeToWrite(_v);
 		}
 	}
 
@@ -78,6 +99,9 @@ public class ThriftWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		if(executor != null) {
+			executor.executeToWrite(_v);
+		}
 	}
 
 	@Override
@@ -89,6 +113,9 @@ public class ThriftWithMessageQueue implements ThriftService {
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
+		}
+		if(executor != null) {
+			executor.executeToWrite(_v);
 		}
 	}
 
@@ -102,6 +129,9 @@ public class ThriftWithMessageQueue implements ThriftService {
 		assert(mq != null);
 		if(mq != null) {
 			mq.add(_v);
+		}
+		if(executor != null) {
+			executor.executeToWrite(_v);
 		}
 	}
 
@@ -146,107 +176,121 @@ public class ThriftWithMessageQueue implements ThriftService {
 	public boolean readBool(String _id) throws TException {
 		MessageQueue<Boolean> mq = 
 				(MessageQueue<Boolean>) 
-				MessageQueueMap.getInstance().
-				getMessageQueue(_id);
-		assert(mq != null);
-		if(mq == null) {
+				MessageQueueMap.getInstance()
+				.getMessageQueue(_id);
+		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
-		Boolean rt = mq.poll();
-		if(rt == null) {
+
+		Boolean value = mq.poll();
+		if(value == null) {
 			throw new TException("Queue is empty");
 		} else {
-			return rt;
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
 		}
 	}
 
 	@Override
 	public short readI16(String _id) throws TException {
 		MessageQueue<Short> mq = 
-					(MessageQueue<Short>) 
-					MessageQueueMap.getInstance().
-					getMessageQueue(_id);
-		assert(mq != null);
-		if(mq == null) {
+				(MessageQueue<Short>) 
+				MessageQueueMap.getInstance()
+				.getMessageQueue(_id);
+		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
-		Short rt = mq.poll();
-		if(rt == null) {
+		
+		Short value = mq.poll();
+		if(value == null) {
 			throw new TException("Queue is empty");
 		} else {
-			return rt;
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
 		}
 	}
 
 	@Override
 	public int readI32(String _id) throws TException {
 		MessageQueue<Integer> mq = 
-					(MessageQueue<Integer>) 
-					MessageQueueMap.getInstance().
-					getMessageQueue(_id);
-		assert(mq != null);
-		if(mq == null) {
+				(MessageQueue<Integer>) 
+				MessageQueueMap.getInstance()
+				.getMessageQueue(_id);
+		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
-		Integer rt = mq.poll();
-		if(rt == null) {
+		Integer value = mq.poll();
+		if(value == null) {
 			throw new TException("Queue is empty");
 		} else {
-			return rt;
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
 		}
 	}
 
 	@Override
 	public long readI64(String _id) throws TException {
 		MessageQueue<Long> mq = 
-					(MessageQueue<Long>) 
-					MessageQueueMap.getInstance().
-					getMessageQueue(_id);
-		assert(mq != null);
-		if(mq == null) {
+				(MessageQueue<Long>) 
+				MessageQueueMap.getInstance()
+				.getMessageQueue(_id);
+		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
-		Long rt = mq.poll();
-		if(rt == null) {
+		Long value = mq.poll();
+		if(value == null) {
 			throw new TException("Queue is empty");
 		} else {
-			return rt;
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
 		}
 	}
 
 	@Override
 	public double readDouble(String _id) throws TException {
 		MessageQueue<Double> mq = 
-					(MessageQueue<Double>) 
-					MessageQueueMap.getInstance().
-					getMessageQueue(_id);
-		assert(mq != null);
-		if(mq == null) {
+				(MessageQueue<Double>) 
+				MessageQueueMap.getInstance()
+				.getMessageQueue(_id);
+		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
-		Double rt = mq.poll();
-		if(rt == null) {
+		Double value = mq.poll();
+		if(value == null) {
 			throw new TException("Queue is empty");
 		} else {
-			return rt;
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
 		}
 	}
 
 	@Override
 	public String readString(String _id) throws TException {
 		MessageQueue<String> mq = 
-					(MessageQueue<String>) 
-					MessageQueueMap.getInstance().
-					getMessageQueue(_id);
-		assert(mq != null);
-		if(mq == null) {
+				(MessageQueue<String>) 
+				MessageQueueMap.getInstance()
+				.getMessageQueue(_id);
+		if( mq == null) {
 			throw new TException("There is no matching queue with id");
 		}
-		String rt = mq.poll();
-		if(rt == null) {
+		String value = mq.poll();
+		if(value == null) {
 			throw new TException("Queue is empty");
 		} else {
-			return rt;
+			if(executor != null) {
+				executor.executeToRead(value);
+			}
+			return value;
 		}
 	}
 

@@ -1,14 +1,11 @@
 package org.chronotics.talaria.websocket.springstompserver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.impl.DummyMessageGenerator;
-import org.chronotics.talaria.common.Handler;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.DummyMessageGenerator;
+import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
 import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -46,14 +43,15 @@ public class Application {
 		
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
-		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
+		TaskExecutor<SimpMessagingTemplate> executorWebsocketTask = 
+				new MessageQueueToWebsocketServer(
+						TaskExecutor.PROPAGATION_RULE.SIMULTANEOUSLY, null);
 		
-		handlerWebsocketTask.putProperty(
-				HandlerMessageQueueToWebsocket.targetDestination,
+		executorWebsocketTask.putProperty(
+				MessageQueueToWebsocketServer.targetDestination,
 				targetDestination);
 		
-		scheduledUpdates.setAttribute(queueMapKey, handlerWebsocketTask);
+		scheduledUpdates.setAttribute(queueMapKey, executorWebsocketTask);
 		
 		Thread thread = new Thread(new DummyMessageGenerator());
 		thread.start();

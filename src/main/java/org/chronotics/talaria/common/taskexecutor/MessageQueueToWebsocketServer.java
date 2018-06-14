@@ -1,6 +1,6 @@
-package org.chronotics.talaria.impl;
+package org.chronotics.talaria.common.taskexecutor;
 
-import org.chronotics.talaria.common.Handler;
+import org.chronotics.talaria.common.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.MessagingException;
@@ -10,19 +10,14 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * @author SG Lee
- * @since 3/20/2015
- * @description
- * This Class is to transfer data to Websocket 
- */
-
-public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
+public class MessageQueueToWebsocketServer<T> extends TaskExecutor<T> {
 	private static final Logger logger = 
-			LoggerFactory.getLogger(HandlerMessageQueueToWebsocket.class);
+			LoggerFactory.getLogger(MessageQueueToWebsocketServer.class);
 	
-	public HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE _propagationRuel, Handler<T> _nextHandler) {
-		super(_propagationRuel, _nextHandler);
+	public MessageQueueToWebsocketServer(
+			TaskExecutor.PROPAGATION_RULE _propagationRule,
+			TaskExecutor<T> _nextExecutor) {
+		super(_propagationRule, _nextExecutor);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -36,13 +31,13 @@ public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
 //	@Override
 //	public void executeImp(T _arg) throws Exception {
 //		String targetDestination = 
-//				(String)super.properties.get(HandlerMessageQueueToWebsocket.targetDestination);
+//				(String)super.properties.get(MessageQueueToWebsocketExecutor.targetDestination);
 //		if(targetDestination == null) {
 //			throw new NullPointerException("targetDestination is not defined");
 //		}
 //		
 //		SimpMessagingTemplate simpMessagingTemplate = 
-//				(SimpMessagingTemplate)super.properties.get(HandlerMessageQueueToWebsocket.simpMessagingTemplate);
+//				(SimpMessagingTemplate)super.properties.get(MessageQueueToWebsocketExecutor.simpMessagingTemplate);
 //		if(simpMessagingTemplate == null) {
 //			throw new NullPointerException("simpleMessagingTemplate is not defined");
 //		}
@@ -69,13 +64,13 @@ public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
 	@Override
 	public T call() throws Exception {
 		String targetDestination = 
-				(String)super.properties.get(HandlerMessageQueueToWebsocket.targetDestination);
+				(String)super.properties.get(MessageQueueToWebsocketServer.targetDestination);
 		if(targetDestination == null) {
 			throw new NullPointerException("targetDestination is not defined");
 		}
 		
 		SimpMessagingTemplate simpMessagingTemplate = 
-				(SimpMessagingTemplate)super.properties.get(HandlerMessageQueueToWebsocket.simpMessagingTemplate);
+				(SimpMessagingTemplate)super.properties.get(MessageQueueToWebsocketServer.simpMessagingTemplate);
 		if(simpMessagingTemplate == null) {
 			throw new NullPointerException("simpleMessagingTemplate is not defined");
 		}
@@ -115,7 +110,7 @@ public class HandlerMessageQueueToWebsocket<T> extends Handler<T>{
 
 	@Override
 	public int getFutureTimeout() {
-		return HandlerMessageQueueToWebsocket.futureTimeout;
+		return MessageQueueToWebsocketServer.futureTimeout;
 	}
 
 }

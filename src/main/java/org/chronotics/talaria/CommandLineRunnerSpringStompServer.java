@@ -1,10 +1,10 @@
 package org.chronotics.talaria;
 
-import org.chronotics.talaria.common.Handler;
+import org.chronotics.talaria.common.TaskExecutor;
+import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.impl.HandlerMessageQueueToWebsocket;
 import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +54,15 @@ public class CommandLineRunnerSpringStompServer implements CommandLineRunner {
 		// start websocket server
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
-		Handler<SimpMessagingTemplate> handlerWebsocketTask = 
-				new HandlerMessageQueueToWebsocket(Handler.PROPAGATION_RULE.SIMULTANEOUSLY, null);
+		TaskExecutor<SimpMessagingTemplate> executorWebsocketTask = 
+				new MessageQueueToWebsocketServer(
+						TaskExecutor.PROPAGATION_RULE.SIMULTANEOUSLY, 
+						null);
 		
-		handlerWebsocketTask.putProperty(
-				HandlerMessageQueueToWebsocket.targetDestination,
+		executorWebsocketTask.putProperty(
+				MessageQueueToWebsocketServer.targetDestination,
 				targetDestination);
 		
-		scheduledUpdates.setAttribute(queueMapKey,handlerWebsocketTask);
+		scheduledUpdates.setAttribute(queueMapKey,executorWebsocketTask);
 	}
 }

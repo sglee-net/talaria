@@ -1,9 +1,7 @@
 package org.chronotics.talaria;
 
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.impl.ThriftWithMessageQueue;
+import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
 import org.chronotics.talaria.thrift.ThriftServer;
 import org.chronotics.talaria.thrift.ThriftServerProperties;
 import org.chronotics.talaria.thrift.ThriftService;
@@ -28,18 +26,6 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 			return;
 		}
 		
-		String queueMapKey = properties.getQueueMapKey();
-		
-		// register message queue
-		if(MessageQueueMap.getInstance().getMessageQueue(queueMapKey) == null) {
-			MessageQueue<String> msgqueue = 
-					new MessageQueue<String>(
-							String.class,
-							MessageQueue.default_maxQueueSize,
-							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-			MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
-		}
-		
 		// thrift server properties
 		ThriftServerProperties thriftServerProperties = 
 				properties.getThriftServerProperties();
@@ -49,7 +35,8 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		}
 		
 		// start thrift server
-		ThriftService thriftServiceHandler = new ThriftWithMessageQueue();
+		ThriftService thriftServiceHandler = 
+				new ThriftServiceWithMessageQueue(null);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
 	}
 }

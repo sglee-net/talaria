@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.impl.ThriftWithMessageQueue;
+import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,7 +36,8 @@ public class MessageTransferThroughThriftServer {
 	
 	public void startServer() {
 		// start thrift server
-		ThriftService thriftServiceHandler = new ThriftWithMessageQueue();
+		ThriftService thriftServiceHandler = 
+				new ThriftServiceWithMessageQueue(null);
 		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);		
 	}
 	
