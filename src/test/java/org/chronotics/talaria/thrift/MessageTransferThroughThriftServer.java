@@ -24,7 +24,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class MessageTransferThroughThriftServer {
 	@Autowired
 	private ThriftServerProperties thriftServerProperties;
+	
+	public ThriftServerProperties getProperties() { return thriftServerProperties; }
 
+	private static ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+	private static ThriftServer thriftServer = new ThriftServer();
+	
 	private static List<String> keyList = null;
 	private static int keySize = 100;
 	private static String message = "{\n" + 
@@ -34,13 +39,10 @@ public class MessageTransferThroughThriftServer {
 			"  \"command\": \"execute training\"\n" + 
 			"}\n" + 
 			"";
-	private static long delay = 5000;
+	private long delay = 5000;
 	
-	public void startServer() {
-		// start thrift server
-		ThriftService thriftServiceHandler = 
-				new ThriftServiceWithMessageQueue(null);
-		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);		
+	public synchronized void startServer() {
+		
 	}
 	
 	@BeforeClass
@@ -49,16 +51,28 @@ public class MessageTransferThroughThriftServer {
 		for(int i=0; i<keySize; i++) {
 			keyList.add("id"+String.valueOf(i));
 		}
+		
+//		MessageTransferThroughThriftServer temp = new MessageTransferThroughThriftServer();
+		ThriftServerProperties properties = new ThriftServerProperties();
+		properties.setIp("192.168.0.41");
+		properties.setPort("9091");
+		properties.setSecureServer("false");
+		
+		System.out.println(properties.toString());
+//		if(thriftServer.isRunning()) {
+//			return;
+//		}
+		thriftServer.start(thriftServiceHandler,properties);
+		
 	}
 	
 	@AfterClass
 	public static void teardown() {
-		ThriftServer.stopServer();
+		thriftServer.stop();
 	}
 	
 	@Test
 	public void getQueueIdWithMessageQueueInsertion() {
-		startServer();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		for(int i=0; i<keySize; i++) {
 			// register message queue
@@ -76,11 +90,11 @@ public class MessageTransferThroughThriftServer {
 					mqMap.get(keyList.get(i));
 			assertTrue(mq!=null);
 		}
+		
 	}
 	
 	@Test
 	public void getQueueIdWithoutMessageQueueInsertion() {
-		startServer();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		for(int i=0; i<keySize; i++) {
 			MessageQueue<String> mq = 
@@ -92,7 +106,6 @@ public class MessageTransferThroughThriftServer {
 	
 	@Test
 	public void insertMessage() {
-		startServer();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		for(int i=0; i<keySize; i++) {
 			MessageQueue<Message> mq = 
@@ -151,7 +164,6 @@ public class MessageTransferThroughThriftServer {
 	
 	@Test
 	public void checkMessage() {
-//		startServer();
 //		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 //		for(int i=0; i<keySize; i++) {
 //			MessageQueue<String> mq = 

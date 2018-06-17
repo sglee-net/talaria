@@ -16,17 +16,7 @@ import org.springframework.validation.annotation.Validated;
 	})
 @Component
 public class ThriftServerProperties {
-//	@Valid
-//	@NotNull
-//	@Value("${thrift.httpPort}")
-//	private String httpPort;
-//	String getHttpPort() {
-//		return httpPort;
-//	}
-//	public void setHttpPort(String _port) {
-//		httpPort = _port;
-//	}
-	
+
 	@Valid
 	@NotNull	
 	@Value("${thrift.ip}")
@@ -80,5 +70,16 @@ public class ThriftServerProperties {
 	}
 	public void setSecureKeyPass(String _secureKeyPass) {
 		secureKeyPass = _secureKeyPass;
+	}
+	
+	@Valid
+	@NotNull
+	@Value("${thrift.secureServer}")
+	private String secureServer;
+	String getSecureServer() {
+		return secureServer;
+	}
+	public void setSecureServer(String _secureServer) {
+		secureServer = _secureServer;
 	}
 }

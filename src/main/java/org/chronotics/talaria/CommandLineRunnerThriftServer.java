@@ -16,6 +16,7 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 	@Autowired
 	private ApplicationContext context;
 	
+	private static ThriftServer thriftServer = null;
 	@Override
 	public void run(String... arg0) throws Exception {
 		
@@ -37,6 +38,7 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		// start thrift server
 		ThriftService thriftServiceHandler = 
 				new ThriftServiceWithMessageQueue(null);
-		ThriftServer.startServer(thriftServiceHandler,thriftServerProperties);
+		thriftServer = new ThriftServer();
+		thriftServer.start(thriftServiceHandler,thriftServerProperties);
 	}
 }

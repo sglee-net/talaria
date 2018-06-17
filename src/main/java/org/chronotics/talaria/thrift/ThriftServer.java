@@ -12,19 +12,37 @@ import org.apache.thrift.transport.TServerTransport;
 import org.chronotics.talaria.thrift.gen.TransferService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.apache.thrift.transport.TSSLTransportFactory.TSSLTransportParameters;
 
 public class ThriftServer {
+	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(ThriftServer.class);
 	
-	private static TransferService.Processor<TransferService.Iface> processor = null;
-	private static TServer server = null;
-	private static TServerTransport serverTransport = null;
-	private static Runnable runnable = null;
+	private TransferService.Processor<TransferService.Iface> processor = null;
+	private TServer server = null;
+	private TServerTransport serverTransport = null;
+	private Runnable runnable = null;
 	
-	public static synchronized void startServer(
+	public ThriftServer() {}
+	
+	public boolean isRunning() {
+		if(server != null) {
+			if(server.isServing()) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isCreate() {
+		return server != null ? true : false;
+	}
+	
+	public void start(
 			TransferService.Iface _serviceHandler, 
 			ThriftServerProperties _properties) {
 		if(server != null) {
@@ -45,7 +63,12 @@ public class ThriftServer {
 			if(runnable == null) {
 				runnable = new Runnable() {
 					public void run() {
-						server(processor, _properties);
+						logger.info(_properties.getSecureServer());
+//						if(_properties.getSecureServer() == "false") {
+							createServer(processor, _properties);
+//						} else {
+//							createSecureServer(processor, _properties);
+//						}
 					}
 				};
 				
@@ -56,7 +79,7 @@ public class ThriftServer {
 		}
 	}
 	
-	public static synchronized void stopServer() {
+	public void stop() {
 		if(server != null) {
 			if(server.isServing()) {
 				logger.info("TServer is stopped");
@@ -67,10 +90,11 @@ public class ThriftServer {
 		}
 	}
    
-	private static void server(
+	private void createServer(
 			TransferService.Processor<TransferService.Iface> processor, 
 			ThriftServerProperties _properties) {
-		try {			
+		try {
+			logger.debug(_properties.toString());
 			String ip = _properties.getIp(); //"192.168.0.41";//
 			int port = Integer.parseInt(_properties.getPort()); //9091;//
     		
@@ -99,7 +123,7 @@ public class ThriftServer {
     	}
 	}
 	
-	private static void secure(
+	private void createSecureServer(
 			TransferService.Processor<TransferService.Iface> processor, 
 			ThriftServerProperties _properties) {
 		int port = Integer.parseInt(_properties.getSecurePort());
