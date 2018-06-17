@@ -2,6 +2,7 @@ package org.chronotics.talaria.common;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
@@ -15,9 +16,13 @@ import org.slf4j.LoggerFactory;
  * You can manage the size of queue and the action when the queue is overflowed
  */
 
-public class MessageQueue<E> implements Iterable<E> {
+public class MessageQueue<E> extends Observable {
+	
+	public static String notifyingMessageRemove = "element is removed";
+	
 	private static final Logger logger = 
 			LoggerFactory.getLogger(MessageQueue.class);
+	
 	public static int default_maxQueueSize = 1000;
 	public enum OVERFLOW_STRATEGY {
 		NO_INSERTION,
@@ -51,7 +56,7 @@ public class MessageQueue<E> implements Iterable<E> {
 		return maxQueueSize;
 	}
 
-	public boolean add(E e) {
+	public boolean add(E _e) {
 		if(queue.size() >= maxQueueSize) {
 			switch (overflowStrategy) {
 			case NO_INSERTION:
@@ -59,36 +64,62 @@ public class MessageQueue<E> implements Iterable<E> {
 				return false;
 			case DELETE_FIRST:
 				logger.info("queue overflow, first element is removed");
-				queue.poll();
-				return queue.add(e);
+				this.poll();
 			default:
+				logger.info("queue overflow, nothing is changed");
 				return false;
 			}
+		}
+		
+		boolean rt = true;
+		try {
+			rt = queue.add(_e);
+		} catch(IllegalStateException e) {
+			logger.error(e.toString());;
+			return false;
+		}
+		if(rt) {
+			setChanged();
+			notifyObservers(_e);
+			return true;
 		} else {
-			return queue.add(e);
+			return false;
 		}
 	}
 	
-	public boolean addAll(Collection<? extends E> c) {
-		if(queue.size() + c.size() >= maxQueueSize) {
+	public boolean addAll(Collection<? extends E> _c) {
+		if(queue.size() + _c.size() >= maxQueueSize) {
 			switch (overflowStrategy) {
 			case NO_INSERTION:
 				logger.info("queue overflow, element is not inserted");
 				return false;
 			case DELETE_FIRST:
-				for(E e:c) {
+				for(E e:_c) {
 					if(queue.size() >= maxQueueSize) {
 						logger.info("queue overflow, first element is removed");
-						queue.poll();
+						this.poll();
 					}
-					queue.add(e);
+					this.add(e);
 				}
 				return true;
 			default:
 				return false;
 			}
+		} 
+		
+		boolean rt = true;
+		try {
+			rt = queue.addAll(_c);
+		} catch(Exception e) {
+			logger.error(e.toString());;
+			return false;
+		}
+		if(rt) {
+			setChanged();
+			notifyObservers(_c);
+			return true;
 		} else {
-			return queue.addAll(c);
+			return false;
 		}
 	}
 	
@@ -101,7 +132,13 @@ public class MessageQueue<E> implements Iterable<E> {
 	}
 	
 	public boolean offer(E e) {
-		return queue.offer(e);
+		if(queue.offer(e)) {
+			setChanged();
+			notifyObservers(e);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
@@ -121,11 +158,19 @@ public class MessageQueue<E> implements Iterable<E> {
 	 * the head of this queue, or null if this queue is empty
 	 */
 	public E poll() {
+		setChanged();
+		notifyObservers(this.notifyingMessageRemove);
 		return queue.poll(); 
 	}
 	
 	public boolean remove(Object o) {
-		return queue.remove(o);
+		if(queue.remove(o)) {
+			setChanged();
+			notifyObservers(this.notifyingMessageRemove);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public int size() {

@@ -27,7 +27,7 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 	}
 
 	@Override
-	public void writeMessage(Message _v) throws TException { 
+	public String writeMessage(Message _v) throws TException { 
 		String id = _v.get_sender_id();
 		MessageQueueMap mqMap = MessageQueueMap.getInstance();
 		MessageQueue<Message> mq = 
@@ -41,13 +41,15 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		}
 		mq.add(_v);//MessageToJson.convert(_v));
 		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
-	public void writeBool(String _id, boolean _v) throws TException {
+	public String writeBool(String _id, boolean _v) throws TException {
 		MessageQueue<Boolean> mq = 
 				(MessageQueue<Boolean>) 
 				MessageQueueMap.getInstance()
@@ -56,13 +58,16 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
-	public void writeI16(String _id, short _v) throws TException {
+	public String writeI16(String _id, short _v) throws TException {
 		MessageQueue<Short> mq = 
 				(MessageQueue<Short>) 
 				MessageQueueMap.getInstance()
@@ -71,13 +76,16 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
-	public void writeI32(String _id, int _v) throws TException {
+	public String writeI32(String _id, int _v) throws TException {
 		MessageQueue<Integer> mq = 
 				(MessageQueue<Integer>) 
 				MessageQueueMap.getInstance()
@@ -86,13 +94,16 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
-	public void writeI64(String _id, long _v) throws TException {
+	public String writeI64(String _id, long _v) throws TException {
 		MessageQueue<Long> mq = 
 				(MessageQueue<Long>) 
 				MessageQueueMap.getInstance()
@@ -101,13 +112,16 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
-	public void writeDouble(String _id, double _v) throws TException {
+	public String writeDouble(String _id, double _v) throws TException {
 		MessageQueue<Double> mq = 
 				(MessageQueue<Double>) 
 				MessageQueueMap.getInstance()
@@ -116,13 +130,16 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
-	public void writeString(String _id, String _v) throws TException {
+	public String writeString(String _id, String _v) throws TException {
 		// TODO Auto-generated method stub
 		MessageQueue<String> mq = 
 				(MessageQueue<String>) 
@@ -132,9 +149,12 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 		if(mq != null) {
 			mq.add(_v);
 		}
+		
+		Object rt = null;
 		if(executor != null) {
-			executor.executeToWrite(_v);
+			rt = executor.executeToWrite(_v);
 		}
+		return (rt != null) ? rt.toString() : null;
 	}
 
 	@Override
@@ -157,25 +177,6 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 			}
 			return value;
 		}
-		
-//		// TODO Auto-generated method stub
-//		Message message = new Message();
-//		String _payload = "Starting the simple server...";
-//		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-//		message.set_timestamp(timestamp.toString());
-//		message.set_sender_id("sender");
-////		message.set_receiver_id(_receiver_id);
-////		message.set_subject("subject");
-////		message.set_sequence_no(0);
-////		message.set_list_bool(new ArrayList<Boolean>());
-////		message.set_list_double(new ArrayList<Double>());
-////		message.set_list_i16(new ArrayList<Short>());
-////		message.set_list_i32(new ArrayList<Integer>());
-////		message.set_list_i64(new ArrayList<Long>());
-////		message.set_list_string(new ArrayList<String>());
-////		message.set_binary(new byte[1]);
-//		message.set_payload(_payload);
-//		return message;
 	}
 
 	@Override
