@@ -5,7 +5,6 @@ import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.common.TalariaProperties;
-import org.chronotics.talaria.websocket.springstompserver.ScheduledUpdates;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

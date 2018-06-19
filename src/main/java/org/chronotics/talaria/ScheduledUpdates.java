@@ -1,4 +1,4 @@
-package org.chronotics.talaria.websocket.springstompserver;
+package org.chronotics.talaria;
 
 import java.util.concurrent.Future;
 
@@ -47,7 +47,7 @@ public class ScheduledUpdates<T> {
     @Scheduled(fixedDelayString = "${stompserverapp.scheduledUpdatesDelay}")
     public void update(){
     	if(executor == null) {
-//    		logger.info("executor is null");
+    		logger.info("executor is null");
     		return;
     	}
 	

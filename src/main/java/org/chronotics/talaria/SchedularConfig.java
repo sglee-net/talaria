@@ -1,4 +1,4 @@
-package org.chronotics.talaria.websocket.springstompserver;
+package org.chronotics.talaria;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
