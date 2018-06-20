@@ -9,10 +9,20 @@ import java.util.Map.Entry;
 
 public class ThriftServerMap {
 	
+	private static class Holder {
+		private static final ThriftServerMap theInstance=new ThriftServerMap();
+	}
+	
+	public static ThriftServerMap getInstance() {
+		return Holder.theInstance;
+	}
+	
 	private Map<String, ThriftServer> serverMap = 
 			new HashMap<String, ThriftServer>();
 	
 	private ThriftServer defaultServer = null;
+	
+	public ThriftServerMap() {}
 	
 	public ThriftServer getDefaultServer(String _key) {
 		ThriftServer ret = this.get(_key);
