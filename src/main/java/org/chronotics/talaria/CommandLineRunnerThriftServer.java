@@ -25,44 +25,35 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 	@Override
 	public void run(String... arg0) throws Exception {
 		
-//		logger.info("CommandLineRunnerThriftServer is running");
+		TalariaProperties properties = 
+				(TalariaProperties)context.getBean("talariaProperties");
+					
+		assert(properties != null);
+		if(properties == null) {
+			return;
+		}
+		if(properties.isNull()) {
+			logger.error("TalariaProperties is null");
+			return;
+		}
 		
-//		TalariaProperties properties = 
-//				(TalariaProperties)context.getBean("talariaProperties");
-//		assert(properties != null);
-//		if(properties == null) {
-//			return;
-//		}
-//		if(properties.isNull()) {
-//			logger.error("TalariaProperties is null");
-//			return;
-//		}
-//		
-//		// thrift server properties
-//		ThriftServerProperties thriftServerProperties = 
-//				properties.getThriftServerProperties();
-//		assert(thriftServerProperties != null);
-//		if(thriftServerProperties == null) {
-//			return;
-//		}
-//		assert(!thriftServerProperties.isNull());
-//		if(thriftServerProperties.isNull()) {
-//			logger.error("ThriftServerProperties is null");
-//			return;
-//		}
-//		
-////		ThriftServerProperties prop = new ThriftServerProperties();
-////		prop.setIp(thriftServerProperties.getIp());
-////		prop.setPort(thriftServerProperties.getPort());
-////		prop.setSecureKeyPass(thriftServerProperties.getSecureKeyPass());
-////		prop.setSecureKeyStore(thriftServerProperties.getSecureKeyStore());
-////		prop.setSecurePort(thriftServerProperties.getSecurePort());
-////		prop.setSecureServer(thriftServerProperties.getSecureServer());
-//		
-//		// start thrift server
-//		ThriftService thriftServiceHandler = 
-//				new ThriftServiceWithMessageQueue(null);
-//		thriftServer = new ThriftServer();
-//		thriftServer.start(thriftServiceHandler,thriftServerProperties);
+		// thrift server properties
+		ThriftServerProperties thriftServerProperties = 
+				properties.getThriftServerProperties();
+
+		assert(thriftServerProperties != null);
+		if(thriftServerProperties == null) {
+			return;
+		}
+		assert(!thriftServerProperties.isNull());
+		if(thriftServerProperties.isNull()) {
+			logger.error("ThriftServerProperties is null");
+			return;
+		}
+		
+		// start thrift server
+		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+		thriftServer = new ThriftServer();
+		thriftServer.start(thriftServiceHandler,thriftServerProperties);
 	}
 }

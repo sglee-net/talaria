@@ -2,6 +2,8 @@ package org.chronotics.talaria.common;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -230,6 +232,20 @@ public abstract class TaskExecutor<T> implements Callable<T> {
 	
 	public Object getProperty(String _key) {
 		return properties.get(_key);
+	}
+	
+	public Set<Entry<String,Object>> getSetOfProperty() {
+		return properties.entrySet();
+	}
+	
+	public void setProperty(TaskExecutor<?> _executor) {
+		if(!properties.isEmpty()) {
+			properties.clear();
+		}
+		Set<Entry<String,Object>> properties = _executor.getSetOfProperty();
+		for(Entry<String,Object> entry : properties) {
+			this.putProperty(entry.getKey(), entry.getValue());
+		}
 	}
 	
 	public void quitExecutor() {

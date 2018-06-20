@@ -34,20 +34,19 @@ public class ScheduledUpdates<T> {
 	public String queueMapKey = null;
 
 	private TaskExecutor<T> executor = null;
+	
 	public void setAttribute(
 			String _queueMapKey, 
 			TaskExecutor<T> _executor) {
 		queueMapKey = _queueMapKey;
 		executor = _executor;
-		executor.putProperty(
-				MessageQueueToWebsocketServer.simpMessagingTemplate, 
-				simpMessagingTemplate);
+		executor.setProperty(_executor);
 	}
 	
     @Scheduled(fixedDelayString = "${application.scheduledUpdatesDelay}")
     public void update(){
     	if(executor == null) {
-    		logger.info("executor is null");
+    		logger.error("Executor is not defined. This can be occurred few times when the process is initialized");
     		return;
     	}
 	
