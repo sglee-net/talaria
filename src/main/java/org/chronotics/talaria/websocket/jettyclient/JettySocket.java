@@ -11,6 +11,12 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
+/**
+ * This class is not finished yet, check again before the use
+ * 2018.06.19
+ * @author sglee
+ *
+ */
 @WebSocket(maxTextMessageSize = 64 * 1024)
 public class JettySocket {
 	private final CountDownLatch closeLatch;

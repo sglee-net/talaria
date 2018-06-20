@@ -33,9 +33,16 @@ public class Application {
 			return;
 		}
 
+//		// start thrift server
+//		ThriftService thriftServiceHandler = 
+//				new ThriftServiceWithMessageQueue(null);
+//		thriftServer = new ThriftServer();
+//		thriftServer.start(thriftServiceHandler,thriftServerProperties);
+		// thrift server properties
+
+		
 		// start thrift server
-		ThriftService thriftServiceHandler = 
-				new ThriftServiceWithMessageQueue(null);
+		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
 		thriftServer = new ThriftServer();
 		thriftServer.start(thriftServiceHandler,thriftServerProperties);
 	}

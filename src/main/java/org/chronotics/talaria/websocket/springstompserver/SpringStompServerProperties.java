@@ -17,11 +17,31 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @PropertySources({
-	@PropertySource(value = "classpath:properties/missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:properties/springstompserver.properties")
+	@PropertySource(value = "classpath:spring/properties/missing.properties", ignoreResourceNotFound=true),
+	@PropertySource("classpath:spring/properties/springstompserver.properties")
 	})
 @Component
 public class SpringStompServerProperties {
+	
+//	public SpringStompServerProperties(SpringStompServerProperties _arg) {
+//		this.set(_arg.port, _arg.sessionTimeout, _arg.destinationTopic, _arg.destinationPrefix, _arg.endPoint, _arg.targetDestination);
+//	}
+//	
+//	private void set(
+//			Integer port,
+//			Integer sessionTimeout,
+//			String destinationTopic,
+//			String destinationPrefix,
+//			String endPoint,
+//			String targetDestination) {
+//		this.port = port;
+//		this.sessionTimeout = sessionTimeout;
+//		this.destinationTopic = destinationTopic;
+//		this.destinationPrefix = destinationPrefix;
+//		this.endPoint = endPoint;
+//		this.targetDestination = targetDestination;
+//	}
+	
 	@Valid
 	@NotNull
 	@Value("${stompserver.port}")

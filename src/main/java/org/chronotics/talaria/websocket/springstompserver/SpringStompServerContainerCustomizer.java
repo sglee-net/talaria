@@ -10,6 +10,12 @@ public class SpringStompServerContainerCustomizer implements EmbeddedServletCont
 
 	@Autowired
 	SpringStompServerProperties springStompServerProperties;
+	public SpringStompServerProperties getSpringStompServerProperties() {
+		return springStompServerProperties;
+	}
+	public void setSpringStompServerProperties(SpringStompServerProperties _prop) {
+		springStompServerProperties = _prop;
+	}
 	
 	@Override
 	public void customize(ConfigurableEmbeddedServletContainer container) {

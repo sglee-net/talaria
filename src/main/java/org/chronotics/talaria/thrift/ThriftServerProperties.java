@@ -4,24 +4,69 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+@Configuration
 @Validated
 @PropertySources({
-	@PropertySource(value = "classpath:properties/missing.properties", ignoreResourceNotFound=true),
-	@PropertySource("classpath:properties/thriftserver.properties")
+	@PropertySource(value = "classpath:spring/properties/missing.properties", ignoreResourceNotFound=true),
+	@PropertySource("classpath:spring/properties/thriftserver.properties")
 	})
 @Component
 public class ThriftServerProperties {
+	
+	public ThriftServerProperties() {}
+	
+	public ThriftServerProperties(ThriftServerProperties _properties) {
+		this.set(_properties);
+	}
+	
+	public void set(ThriftServerProperties _properties) {
+		this.set(_properties.getIp(),
+				_properties.getPort(),
+				_properties.getSecurePort(),
+				_properties.getSecureKeyStore(),
+				_properties.getSecureKeyPass(),
+				_properties.getSecureServer());
+	}
+	
+	private void set(
+			String ip,
+			String port,
+			String securePort,
+			String secureKeyStore,
+			String secureKeyPass,
+			String secureServer) {
+		this.ip = ip;
+		this.port = port;
+		this.securePort = securePort;
+		this.secureKeyStore = secureKeyStore;
+		this.secureKeyPass = secureKeyPass;
+		this.secureServer = secureServer;
+	}
+	
+	public boolean isNull() {
+		if(ip == null && 
+				port == null &&
+				securePort == null &&
+				secureKeyStore ==null &&
+				secureKeyPass == null &&
+				secureServer == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Valid
 	@NotNull	
 	@Value("${thrift.ip}")
 	private String ip;
-	String getIp() {
+	public String getIp() {
 		return ip;
 	}
 	public void setIp(String _ip) {
@@ -32,7 +77,7 @@ public class ThriftServerProperties {
 	@NotNull	
 	@Value("${thrift.port}")
 	private String port;
-	String getPort() {
+	public String getPort() {
 		return port;
 	}
 	public void setPort(String _port) {
@@ -43,7 +88,7 @@ public class ThriftServerProperties {
 	@NotNull	
 	@Value("${thrift.securePort}")
 	private String securePort;
-	String getSecurePort() {
+	public String getSecurePort() {
 		return securePort;
 	}
 	public void setSecurePort(String _port) {
@@ -54,7 +99,7 @@ public class ThriftServerProperties {
 	@NotNull	
 	@Value("${thrift.secureKeyStore}")
 	private String secureKeyStore;
-	String getSecureKeyStore() {
+	public String getSecureKeyStore() {
 		return secureKeyStore;
 	}
 	public void setSecureKeyStore(String _secureKeyStore) {
@@ -65,7 +110,7 @@ public class ThriftServerProperties {
 	@NotNull	
 	@Value("${thrift.secureKeyPass}")
 	private String secureKeyPass;
-	String getSecureKeyPass() {
+	public String getSecureKeyPass() {
 		return secureKeyPass;
 	}
 	public void setSecureKeyPass(String _secureKeyPass) {
@@ -76,7 +121,7 @@ public class ThriftServerProperties {
 	@NotNull
 	@Value("${thrift.secureServer}")
 	private String secureServer;
-	String getSecureServer() {
+	public String getSecureServer() {
 		return secureServer;
 	}
 	public void setSecureServer(String _secureServer) {

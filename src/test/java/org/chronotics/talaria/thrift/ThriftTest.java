@@ -8,6 +8,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
 
+import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftServerProperties.class})
 public class ThriftTest {
@@ -25,5 +27,19 @@ public class ThriftTest {
 		assertEquals(properties.getSecurePort(),"9092");
 		assertEquals(properties.getSecureKeyStore(),"~/.keystore");
 		assertEquals(properties.getSecureKeyPass(),"thrift");
+	}
+	
+	@Test
+	public void startStopThriftServer() {
+		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+		ThriftServer thriftServer = new ThriftServer();
+		thriftServer.start(thriftServiceHandler,properties);
+		assertEquals(true,thriftServer.isRunning());
+		thriftServer.stop();
+		assertEquals(false,thriftServer.isRunning());
+		thriftServer.start(thriftServiceHandler,properties);
+		assertEquals(false,thriftServer.isRunning());
+		thriftServer.stop();
+		assertEquals(false,thriftServer.isRunning());
 	}
 }

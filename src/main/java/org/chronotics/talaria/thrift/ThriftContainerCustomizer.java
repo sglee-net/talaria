@@ -6,13 +6,13 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.stereotype.Component;
 
-@Component
-public class ThriftContainerCustomizer implements EmbeddedServletContainerCustomizer {
-	@Value("${thrift.httpPort}")
-	private Integer httpPort;
-
-	@Override
-	public void customize(ConfigurableEmbeddedServletContainer container) {
-		container.setPort(httpPort);
-	}
-}
+//@Component
+//public class ThriftContainerCustomizer implements EmbeddedServletContainerCustomizer {
+//	@Value("${thrift.httpPort}")
+//	private Integer httpPort;
+//
+//	@Override
+//	public void customize(ConfigurableEmbeddedServletContainer container) {
+//		container.setPort(httpPort);
+//	}
+//}

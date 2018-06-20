@@ -1,11 +1,11 @@
 package org.chronotics.talaria.websocket.springstompserver;
 
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TalariaProperties;
 import org.chronotics.talaria.common.TaskExecutor;
 import org.chronotics.talaria.common.taskexecutor.DummyMessageGenerator;
 import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
 import org.chronotics.talaria.ScheduledUpdates;
+import org.chronotics.talaria.TalariaProperties;
 import org.chronotics.talaria.common.MessageQueue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,17 +22,11 @@ public class Application {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(Application.class, args);
-//		String[] allBeanNames = context.getBeanDefinitionNames();
-//		for(String beanName : allBeanNames) {
-//			System.out.println(beanName);
-//		}
 	    
 		// getProperties
 		TalariaProperties properties = 
-				(TalariaProperties)context.getBean("talariaProperties");
-		String queueMapKey = properties.getQueueMapKey();//"vib";
-		SpringStompServerProperties stompProperties = properties.getSpringStompServerProperties();
-		String targetDestination = stompProperties.getTargetDestination(); // "/topic/vib";
+				(TalariaProperties)context.getBean("talariaProperties");		
+		String mqMapKey = properties.getMqMapKey();
 		
 		// register message queue
 		MessageQueue<String> msgqueue = 
@@ -40,7 +34,10 @@ public class Application {
 						String.class,
 						MessageQueue.default_maxQueueSize,
 						MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-		MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
+		MessageQueueMap.getInstance().put(mqMapKey, msgqueue);
+		
+		SpringStompServerProperties stompProperties = properties.getSpringStompServerProperties();
+		String targetDestination = stompProperties.getTargetDestination();
 		
 		ScheduledUpdates scheduledUpdates = context.getBean(ScheduledUpdates.class);
 		
@@ -52,7 +49,7 @@ public class Application {
 				MessageQueueToWebsocketServer.targetDestination,
 				targetDestination);
 		
-		scheduledUpdates.setAttribute(queueMapKey, executorWebsocketTask);
+		scheduledUpdates.setAttribute(mqMapKey, executorWebsocketTask);
 		
 		Thread thread = new Thread(new DummyMessageGenerator());
 		thread.start();

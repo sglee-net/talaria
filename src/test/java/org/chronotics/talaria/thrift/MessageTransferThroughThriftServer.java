@@ -27,7 +27,7 @@ public class MessageTransferThroughThriftServer {
 	
 	public ThriftServerProperties getProperties() { return thriftServerProperties; }
 
-	private static ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+//	private static ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
 	private static ThriftServer thriftServer = new ThriftServer();
 	
 	private static List<String> keyList = null;
@@ -53,16 +53,20 @@ public class MessageTransferThroughThriftServer {
 		}
 		
 //		MessageTransferThroughThriftServer temp = new MessageTransferThroughThriftServer();
-		ThriftServerProperties properties = new ThriftServerProperties();
-		properties.setIp("192.168.0.41");
-		properties.setPort("9091");
-		properties.setSecureServer("false");
+		ThriftServerProperties thriftServerProperties = new ThriftServerProperties();
+		thriftServerProperties.setIp("192.168.0.41");
+		thriftServerProperties.setPort("9091");
+		thriftServerProperties.setSecureServer("false");
 		
-		System.out.println(properties.toString());
-//		if(thriftServer.isRunning()) {
-//			return;
-//		}
-		thriftServer.start(thriftServiceHandler,properties);
+		System.out.println(thriftServerProperties.toString());
+////		if(thriftServer.isRunning()) {
+////			return;
+////		}
+//		thriftServer.start(thriftServiceHandler,properties);
+		
+		ThriftService thriftServiceHandler = new ThriftServiceWithMessageQueue(null);
+		thriftServer = new ThriftServer();
+		thriftServer.start(thriftServiceHandler,thriftServerProperties);
 		
 	}
 	

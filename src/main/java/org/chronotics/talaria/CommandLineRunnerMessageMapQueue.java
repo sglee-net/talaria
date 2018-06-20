@@ -2,7 +2,6 @@ package org.chronotics.talaria;
 
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
-import org.chronotics.talaria.common.TalariaProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,16 +23,16 @@ public class CommandLineRunnerMessageMapQueue implements CommandLineRunner {
 			return;
 		}
 		
-		String queueMapKey = properties.getQueueMapKey();
+		String mqMapKey = properties.getMqMapKey();
 		
 		// register message queue
-		if(MessageQueueMap.getInstance().get(queueMapKey) == null) {
+		if(MessageQueueMap.getInstance().get(mqMapKey) == null) {
 			MessageQueue<String> msgqueue = 
 					new MessageQueue<String>(
 							String.class,
 							MessageQueue.default_maxQueueSize,
 							MessageQueue.OVERFLOW_STRATEGY.DELETE_FIRST);
-			MessageQueueMap.getInstance().put(queueMapKey, msgqueue);
+			MessageQueueMap.getInstance().put(mqMapKey, msgqueue);
 		}
 	}
 }
