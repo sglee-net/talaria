@@ -2,8 +2,6 @@ package org.chronotics.talaria;
 
 import org.chronotics.talaria.common.TaskExecutor;
 import org.chronotics.talaria.common.taskexecutor.MessageQueueToWebsocketServer;
-import org.chronotics.talaria.common.MessageQueue;
-import org.chronotics.talaria.common.MessageQueueMap;
 import org.chronotics.talaria.websocket.springstompserver.SpringStompServerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
