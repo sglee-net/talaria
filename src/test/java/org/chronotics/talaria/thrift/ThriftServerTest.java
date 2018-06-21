@@ -1,18 +1,17 @@
 package org.chronotics.talaria.thrift;
 
+import static org.junit.Assert.assertEquals;
+
+import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.*;
-
-import org.chronotics.talaria.common.taskexecutor.ThriftServiceWithMessageQueue;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ThriftServerProperties.class})
-public class ThriftTest {
+public class ThriftServerTest {
 	@Autowired
 	private ThriftServerProperties properties;
 	

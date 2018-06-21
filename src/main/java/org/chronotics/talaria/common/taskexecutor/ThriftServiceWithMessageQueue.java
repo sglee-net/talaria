@@ -164,13 +164,16 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
-			throw new TException("There is no matching queue with id");
+			logger.info("There is no matching queue with id");
+//			throw new TException("There is no matching queue with id");
+			return null;
 		}
 
 		Message value = mq.poll();
 		if(value == null) {
-			return null;
+			logger.info("Queue is empty");
 //			throw new TException("Queue is empty");
+			return null;
 		} else {
 			if(executor != null) {
 				executor.executeToRead(value);
@@ -186,11 +189,13 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
+			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
 
 		Boolean value = mq.poll();
 		if(value == null) {
+			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
 			if(executor != null) {
@@ -207,11 +212,13 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
+			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
 		
 		Short value = mq.poll();
 		if(value == null) {
+			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
 			if(executor != null) {
@@ -228,10 +235,12 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
+			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
 		Integer value = mq.poll();
 		if(value == null) {
+			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
 			if(executor != null) {
@@ -248,10 +257,12 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
+			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
 		Long value = mq.poll();
 		if(value == null) {
+			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
 			if(executor != null) {
@@ -268,10 +279,12 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
+			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
 		Double value = mq.poll();
 		if(value == null) {
+			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
 			if(executor != null) {
@@ -288,10 +301,12 @@ public class ThriftServiceWithMessageQueue implements ThriftService {
 				MessageQueueMap.getInstance()
 				.get(_id);
 		if( mq == null) {
+			logger.info("There is no matching queue with id");
 			throw new TException("There is no matching queue with id");
 		}
 		String value = mq.poll();
 		if(value == null) {
+			logger.info("Queue is empty");
 			throw new TException("Queue is empty");
 		} else {
 			if(executor != null) {
