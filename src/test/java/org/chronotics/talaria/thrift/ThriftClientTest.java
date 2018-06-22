@@ -3,6 +3,9 @@ package org.chronotics.talaria.thrift;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.thrift.TException;
 import org.chronotics.talaria.common.MessageQueue;
 import org.chronotics.talaria.common.MessageQueueMap;
@@ -63,13 +66,14 @@ public class ThriftClientTest {
 //			e.printStackTrace();
 //		}
 		
-		MessageQueueMap mqMap = MessageQueueMap.getInstance();
-		MessageQueue mq = mqMap.get("thrift");
+		List<String> tempList = 
+				new ArrayList<String>();
 		
-		int count = 5;
+		int count = 100;
 		for(int i=0; i<count; i++) {
 			try {
 				String ret = service.writeString("thrift", String.valueOf(i));
+				tempList.add(String.valueOf(i));
 			} catch (TException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -77,17 +81,24 @@ public class ThriftClientTest {
 			}
 		}
 		
-		for(int i=0; i<10; i++) {
+		for(int i=0; i<count; i++) {
 			try {
-				String ret = null;
-				ret = service.readString("thrift");
-				System.out.println(ret);
-//				assertEquals(String.valueOf(i),ret);
+				String value = null;
+				value = service.readString("thrift");
+				System.out.println(value);
+				if(value != null) {
+					tempList.remove(value);
+				} else {
+					break;
+				}
 			} catch (TException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				logger.info(e.toString());
 			}
 		}
+		
+		System.out.println(tempList.size());
+		assertEquals(0,tempList.size());
 	}
 }
