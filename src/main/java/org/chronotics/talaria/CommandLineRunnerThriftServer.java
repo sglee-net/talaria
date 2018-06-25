@@ -32,10 +32,10 @@ public class CommandLineRunnerThriftServer implements CommandLineRunner {
 		if(properties == null) {
 			return;
 		}
-		if(properties.isNull()) {
-			logger.error("TalariaProperties is null");
-			return;
-		}
+//		if(properties.isNull()) {
+//			logger.error("TalariaProperties is null");
+//			return;
+//		}
 		
 		// thrift server properties
 		ThriftServerProperties thriftServerProperties = 
